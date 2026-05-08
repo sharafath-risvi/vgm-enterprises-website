@@ -9,11 +9,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="nav-logo" style={{ marginBottom: 16 }}>
-              <div className="nav-logo-mark">V</div>
-              <div className="nav-logo-text">
-                <span>VGM Enterprises</span>
-                <span>Premium Plotted Developments</span>
-              </div>
+              <img src="/vgmlogo.jpeg" alt="VGM Enterprises Logo" className="nav-logo-img" />
             </div>
             <p className="footer-brand-desc">
               Premium Plots at Archapakkam Thozhupedu — Your Dream Plot, Your Future Address.
@@ -31,8 +27,6 @@ export default function Footer() {
             <h3 className="footer-heading">Navigate</h3>
             <ul className="footer-links">
               <li><NavLink to="/">Discover</NavLink></li>
-              <li><NavLink to="/location">Location</NavLink></li>
-              <li><NavLink to="/smart-living">Smart Living</NavLink></li>
               <li><NavLink to="/master-plan">Master Plan</NavLink></li>
               <li><NavLink to="/connect">Connect</NavLink></li>
             </ul>

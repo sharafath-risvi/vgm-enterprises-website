@@ -3302,8 +3302,7 @@
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  background: #e8e4dc;
+  background: transparent;
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.14),
     0 0 0 1px rgba(200, 169, 106, 0.18),
@@ -3324,14 +3323,15 @@
 
 .ssc-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
+  transform: scale(1);
   display: block;
   transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .ssc-img-card:hover .ssc-img {
-  transform: scale(1.06);
+  transform: scale(1.02);
 }
 
 .ssc-img-overlay {
@@ -3516,7 +3516,6 @@
 
   .ssc-img-card {
     border-radius: 14px;
-    aspect-ratio: 3 / 2;
   }
 
   .ssc-img-overlay {

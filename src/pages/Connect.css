@@ -130,7 +130,6 @@
   background: #0d4a35;
   border-color: #C8A96A;
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(200,169,106,0.25);
 }
 
 .ch-btn-secondary {
@@ -462,7 +461,6 @@
 
 .cta-btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(200, 169, 106, 0.4);
   background: linear-gradient(135deg, #f5e4a0 0%, #d8b874 100%);
 }
 

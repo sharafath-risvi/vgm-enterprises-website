@@ -253,7 +253,6 @@ export default function Connect() {
                   <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="social-btn" id="social-whatsapp" aria-label="WhatsApp">💬</a>
                   <a href="tel:+919876543210" className="social-btn" id="social-phone" aria-label="Phone">📞</a>
                   <a href="mailto:info@vgmenterprises.in" className="social-btn" id="social-email" aria-label="Email">✉️</a>
-                  <a href="#youtube" className="social-btn" id="social-youtube" aria-label="YouTube">▶️</a>
                 </div>
               </div>
             </div>

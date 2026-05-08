@@ -1580,21 +1580,17 @@ export default function Discover() {
       const video = heroVideoRef.current;
       if (!video) return;
 
-      const isScrollingUp = scrollY < lastScrollY.current;
       const isInsideHero = scrollY > 50 && scrollY < heroBottom;
 
       if (isInsideHero) {
-        if (isScrollingUp && video.ended) {
-          video.currentTime = 0;
-          video.play().catch(e => console.log('Play blocked', e));
-        } else if (video.paused && !video.ended) {
+        if (video.paused && !video.ended) {
           video.play().catch(e => console.log('Play blocked', e));
         }
       } else if (scrollY <= 50) {
         if (!video.paused) {
           video.pause();
         }
-        if (isScrollingUp && video.currentTime > 0) {
+        if (video.currentTime > 0) {
           video.currentTime = 0;
         }
       } else if (scrollY >= heroBottom) {
@@ -1610,6 +1606,15 @@ export default function Discover() {
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleVideoEnded = () => {
+    const windowHeight = window.innerHeight;
+    window.scrollTo({
+      top: windowHeight * 2 + 5, // slightly past the wrapper to ensure next section triggers
+      behavior: 'smooth'
+    });
+  };
+
   const [activeTrustIndex, setActiveTrustIndex] = useState(0);
   const trustPauseUntilRef = useRef(0);
 
@@ -1693,6 +1698,7 @@ export default function Discover() {
             muted
             playsInline
             className="dvh-video"
+            onEnded={handleVideoEnded}
             // loop removed to naturally stop on final frame
             // autoPlay removed to start frozen
           >
@@ -1920,7 +1926,7 @@ export default function Discover() {
             <p className="cta-strip-sub">DTCP & RERA Approved · Clear Title · Limited Plots · High Appreciation</p>
           </div>
           <div className="cta-strip-actions">
-            <button className="nav-cta" onClick={() => navigate('/connect')} id="nav-site-visit-btn">
+            <button className="btn-gold" onClick={() => navigate('/connect')} id="nav-site-visit-btn">
               Book Site Visit
             </button>
           </div>
