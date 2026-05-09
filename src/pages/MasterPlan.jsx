@@ -234,8 +234,8 @@ function ConnectedEcosystemSection() {
     <section ref={secRef} className="cle-section" aria-label="Connected Living Ecosystem">
       <div className="cle-bg-mesh" aria-hidden="true" />
 
-      <div className="section-wrap">
-        {/* Heading */}
+      <div className="section-wrap-master">
+        {/* Heading */} 
         <div className="cle-header">
           <div className="section-eyebrow cle-eyebrow">Connected Living Ecosystem</div>
           <h2 className="cle-main-title">
@@ -522,8 +522,6 @@ function SustainableLivingShowcase() {
   const touchStartYRef = useRef(null);
   const touchLockedRef = useRef(false);
   const transitionTimerRef = useRef(null);
-  const progress = activeIdx / (SUSTAIN_STORIES.length - 1);
-
   useEffect(() => {
     const outer = outerRef.current;
     if (!outer) return;
@@ -657,8 +655,13 @@ function SustainableLivingShowcase() {
         <div className="sls-stage-bg" aria-hidden="true" />
         <div className="sls-stage-grain" aria-hidden="true" />
 
-        <div className="sls-progress-bar" aria-hidden="true">
-          <div className="sls-progress-fill" style={{ height: `${progress * 100}%` }} />
+        <div className="sls-progress-dots" aria-hidden="true">
+          {SUSTAIN_STORIES.map((story, i) => (
+            <span
+              key={story.id}
+              className={`sls-progress-dot${i === activeIdx ? ' is-active' : ''}`}
+            />
+          ))}
         </div>
 
         <div className="sls-counter" aria-hidden="true">
@@ -688,19 +691,8 @@ function SustainableLivingShowcase() {
                 <div className="sls-slide-overlay" />
                 <div className="sls-slide-overlay-bottom" />
 
-                <div className="sls-slide-content">
-                  <div className="sls-slide-kicker">
-                    <div className="sls-slide-label">{s.label}</div>
-                    <div className="sls-slide-gold-line" aria-hidden="true" />
-                  </div>
-                  <h2 className="sls-slide-title">{s.title}</h2>
-                  <p className="sls-slide-desc">{s.desc}</p>
-                </div>
+                
               </div>
-            </div>
-
-            <div className="sls-slide-num" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
             </div>
           </div>
         ))}

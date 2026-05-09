@@ -9,12 +9,14 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const navigate = useNavigate();
   const location = useLocation();
   const linksRef = useRef([]);
+  const navActivatedRef = useRef(false);
+  const lastScrollYRef = useRef(0);
 
   const updatePillToActive = () => {
     const activeIndex = NAV_ITEMS.findIndex(item => 
@@ -38,19 +40,40 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    
+    const onRouteEnter = () => {
+      navActivatedRef.current = false;
+      lastScrollYRef.current = window.scrollY;
+      setVisible(false);
+      setScrolled(false);
+      setMenuOpen(false);
+    };
+
+    onRouteEnter();
+  }, [location.pathname]);
+
+  useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
+
+      if (!navActivatedRef.current) {
+        if (Math.abs(currentScrollY - lastScrollYRef.current) >= 8 || currentScrollY > 8) {
+          navActivatedRef.current = true;
+          setVisible(true);
+        } else {
+          lastScrollYRef.current = currentScrollY;
+          return;
+        }
+      }
+
       setScrolled(currentScrollY > 40);
-      
-      if (currentScrollY > lastScrollY && currentScrollY > 40) {
+
+      if (currentScrollY > lastScrollYRef.current && currentScrollY > 40) {
         setVisible(false);
-      } else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollYRef.current) {
         setVisible(true);
       }
-      
-      lastScrollY = currentScrollY;
+
+      lastScrollYRef.current = currentScrollY;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
