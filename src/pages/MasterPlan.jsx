@@ -515,137 +515,190 @@ const SUSTAIN_STORIES = [
 
 function SustainableLivingShowcase() {
   const outerRef  = useRef(null);
-  const slidesRef = useRef([]);
-  const rafRef    = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [progress, setProgress]   = useState(0);
-
-  const targetProgress = useRef(0);
-  const currentProgress = useRef(0);
+  const activeIdxRef = useRef(0);
+  const isAnimatingRef = useRef(false);
+  const wheelBufferRef = useRef(0);
+  const touchStartYRef = useRef(null);
+  const touchLockedRef = useRef(false);
+  const transitionTimerRef = useRef(null);
+  const progress = activeIdx / (SUSTAIN_STORIES.length - 1);
 
   useEffect(() => {
     const outer = outerRef.current;
     if (!outer) return;
 
     const N = SUSTAIN_STORIES.length;
+    const TRANSITION_MS = 820;
+    const WHEEL_THRESHOLD = 80;
+    const TOUCH_THRESHOLD = 56;
 
-    const onScroll = () => {
+    const isPinned = () => {
       const rect = outer.getBoundingClientRect();
-      const scrolled = -rect.top;
-      const total    = rect.height - window.innerHeight;
-      targetProgress.current = Math.min(Math.max(scrolled / total, 0), 1);
+      return rect.top <= 0 && rect.bottom >= window.innerHeight;
     };
 
-    const tick = () => {
-      // Lerp for buttery smooth cinematic ease (increased for ultra responsiveness)
-      currentProgress.current += (targetProgress.current - currentProgress.current) * 0.15;
-      
-      // Snap when extremely close to prevent micro-calculations
-      if (Math.abs(targetProgress.current - currentProgress.current) < 0.0001) {
-        currentProgress.current = targetProgress.current;
+    const syncImmersiveState = () => {
+      document.body.classList.toggle('sls-nav-hidden', isPinned());
+    };
+
+    const goToSlide = (nextIdx) => {
+      if (nextIdx < 0 || nextIdx >= N || nextIdx === activeIdxRef.current) return false;
+
+      isAnimatingRef.current = true;
+      wheelBufferRef.current = 0;
+      setActiveIdx(nextIdx);
+
+      window.clearTimeout(transitionTimerRef.current);
+      transitionTimerRef.current = window.setTimeout(() => {
+        isAnimatingRef.current = false;
+      }, TRANSITION_MS);
+
+      return true;
+    };
+
+    const onWheel = (event) => {
+      if (!isPinned()) {
+        wheelBufferRef.current = 0;
+        return;
       }
 
-      const raw = currentProgress.current;
-      const slideRaw  = raw * (N - 1);
-      
-      setActiveIdx(Math.min(Math.floor(slideRaw + 0.5), N - 1));
-      setProgress(raw);
+      const direction = Math.sign(event.deltaY);
+      if (direction === 0) return;
 
-      // per-slide visibility
-      slidesRef.current.forEach((el, i) => {
-        if (!el) return;
-        const dist  = slideRaw - i; 
-        
-        let opacity = 0;
-        let scale = 1;
-        let ty = 0;
+      const atStart = activeIdxRef.current === 0;
+      const atEnd = activeIdxRef.current === N - 1;
+      const tryingToLeave = (direction < 0 && atStart) || (direction > 0 && atEnd);
 
-        if (dist >= 0 && dist <= 1) {
-          // Current slide fading out: softer fade for seamless transition
-          opacity = 1 - dist;
-          scale = 1 + dist * 0.04; 
-          ty = -dist * 40;
-        } else if (dist < 0 && dist >= -1) {
-          // Next slide coming in (stays underneath, full opacity, subtle grow and slide up)
-          opacity = 1;
-          scale = 1 - Math.abs(dist) * 0.04;
-          ty = Math.abs(dist) * 40; 
-        } else if (dist === 0) {
-          opacity = 1;
-          scale = 1;
-          ty = 0;
-        }
+      if (tryingToLeave && !isAnimatingRef.current) {
+        wheelBufferRef.current = 0;
+        return;
+      }
 
-        el.style.opacity   = opacity;
-        // Force GPU acceleration with translate3d
-        el.style.transform = `translate3d(0, ${ty}px, 0) scale(${scale})`;
-        el.style.zIndex    = 10 - i; 
-      });
+      event.preventDefault();
 
-      rafRef.current = requestAnimationFrame(tick);
+      if (isAnimatingRef.current) return;
+
+      wheelBufferRef.current += event.deltaY;
+
+      if (Math.abs(wheelBufferRef.current) < WHEEL_THRESHOLD) return;
+
+      goToSlide(activeIdxRef.current + (wheelBufferRef.current > 0 ? 1 : -1));
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // Initialize target
-    currentProgress.current = targetProgress.current; // Sync instantly on load
-    rafRef.current = requestAnimationFrame(tick);
+    const onTouchStart = (event) => {
+      if (!isPinned()) return;
+      touchStartYRef.current = event.touches[0]?.clientY ?? null;
+      touchLockedRef.current = false;
+    };
+
+    const onTouchMove = (event) => {
+      if (!isPinned() || touchStartYRef.current == null) return;
+
+      const currentY = event.touches[0]?.clientY ?? touchStartYRef.current;
+      const deltaY = touchStartYRef.current - currentY;
+
+      if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
+
+      const direction = Math.sign(deltaY);
+      const atStart = activeIdxRef.current === 0;
+      const atEnd = activeIdxRef.current === N - 1;
+      const tryingToLeave = (direction < 0 && atStart) || (direction > 0 && atEnd);
+
+      if (tryingToLeave && !isAnimatingRef.current) {
+        touchStartYRef.current = currentY;
+        return;
+      }
+
+      event.preventDefault();
+
+      if (!touchLockedRef.current && !isAnimatingRef.current) {
+        touchLockedRef.current = goToSlide(activeIdxRef.current + direction);
+      }
+    };
+
+    const onTouchEnd = () => {
+      touchStartYRef.current = null;
+      touchLockedRef.current = false;
+    };
+
+    outer.addEventListener('wheel', onWheel, { passive: false });
+    outer.addEventListener('touchstart', onTouchStart, { passive: true });
+    outer.addEventListener('touchmove', onTouchMove, { passive: false });
+    outer.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('scroll', syncImmersiveState, { passive: true });
+    window.addEventListener('resize', syncImmersiveState);
+    syncImmersiveState();
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      document.body.classList.remove('sls-nav-hidden');
+      window.clearTimeout(transitionTimerRef.current);
+      outer.removeEventListener('wheel', onWheel);
+      outer.removeEventListener('touchstart', onTouchStart);
+      outer.removeEventListener('touchmove', onTouchMove);
+      outer.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('scroll', syncImmersiveState);
+      window.removeEventListener('resize', syncImmersiveState);
     };
   }, []);
+
+  useEffect(() => {
+    activeIdxRef.current = activeIdx;
+  }, [activeIdx]);
 
   return (
     <section
       ref={outerRef}
       className="sls-outer"
       aria-label="Sustainable Living Story"
-      style={{ height: `${SUSTAIN_STORIES.length * 55}vh` }} /* Reduced for lightweight, fluid single-swipe scroll */
+      style={{ height: '220vh' }}
     >
-      {/* Progress bar */}
-      <div className="sls-progress-bar" aria-hidden="true">
-        <div className="sls-progress-fill" style={{ height: `${progress * 100}%` }} />
-      </div>
-
-      {/* Slide counter */}
-      <div className="sls-counter" aria-hidden="true">
-        <span className="sls-counter-cur">{String(activeIdx + 1).padStart(2, '0')}</span>
-        <span className="sls-counter-sep">/{String(SUSTAIN_STORIES.length).padStart(2, '0')}</span>
-      </div>
-
-      {/* Sticky stage */}
       <div className="sls-sticky">
+        <div className="sls-stage-bg" aria-hidden="true" />
+        <div className="sls-stage-grain" aria-hidden="true" />
+
+        <div className="sls-progress-bar" aria-hidden="true">
+          <div className="sls-progress-fill" style={{ height: `${progress * 100}%` }} />
+        </div>
+
+        <div className="sls-counter" aria-hidden="true">
+          <span className="sls-counter-cur">{String(activeIdx + 1).padStart(2, '0')}</span>
+          <span className="sls-counter-sep">/{String(SUSTAIN_STORIES.length).padStart(2, '0')}</span>
+        </div>
+
         {SUSTAIN_STORIES.map((s, i) => (
           <div
             key={s.id}
-            ref={(el) => (slidesRef.current[i] = el)}
-            className="sls-slide"
+            className={[
+              'sls-slide',
+              i === activeIdx ? 'is-active' : '',
+              i < activeIdx ? 'is-before' : '',
+              i > activeIdx ? 'is-after' : '',
+            ].filter(Boolean).join(' ')}
             aria-hidden={i !== activeIdx}
           >
-            {/* Image */}
-            <div className="sls-slide-img-wrap">
-              <img
-                src={s.img}
-                alt={s.title}
-                className="sls-img-el"
-                loading={i === 0 ? 'eager' : 'lazy'}
-              />
+            <div className="sls-slide-media">
+              <div className="sls-slide-img-wrap">
+                <img
+                  src={s.img}
+                  alt={s.title}
+                  className="sls-img-el"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+                <div className="sls-slide-overlay" />
+                <div className="sls-slide-overlay-bottom" />
+
+                <div className="sls-slide-content">
+                  <div className="sls-slide-kicker">
+                    <div className="sls-slide-label">{s.label}</div>
+                    <div className="sls-slide-gold-line" aria-hidden="true" />
+                  </div>
+                  <h2 className="sls-slide-title">{s.title}</h2>
+                  <p className="sls-slide-desc">{s.desc}</p>
+                </div>
+              </div>
             </div>
 
-            {/* Cinematic overlays */}
-            <div className="sls-slide-overlay" />
-            <div className="sls-slide-overlay-bottom" />
-
-            {/* Content */}
-            <div className="sls-slide-content">
-              <div className="sls-slide-label">{s.label}</div>
-              <div className="sls-slide-gold-line" aria-hidden="true" />
-              <h2 className="sls-slide-title">{s.title}</h2>
-              <p className="sls-slide-desc">{s.desc}</p>
-            </div>
-
-            {/* Slide number watermark */}
             <div className="sls-slide-num" aria-hidden="true">
               {String(i + 1).padStart(2, '0')}
             </div>
