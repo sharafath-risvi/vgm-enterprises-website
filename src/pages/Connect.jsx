@@ -235,7 +235,7 @@ export default function Connect() {
                 <div className="info-details">
                   {[
                     { icon: '📍', title: 'Site Address', text: 'VGM Nagar, Archapakkam Thozhupedu,\nNear GST Road, Tamil Nadu' },
-                    { icon: '⏰', title: 'Office Hours', text: 'Monday – Sunday\n9:00 AM – 7:00 PM (Including Weekends)' },
+                    { icon: '✨', title: 'Why Visit VGM Site?', text: '• DTCP & RERA approved plotted development\n• Prime location near GST Road with future potential' },
                     { icon: '🚗', title: 'How to Reach', text: 'Direct access from GST Road.\nNear Aalam International School, Archapakkam.' },
                   ].map((d) => (
                     <div key={d.title} className="info-detail-item">

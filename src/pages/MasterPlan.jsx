@@ -405,6 +405,7 @@ function ConnectedEcosystemSection() {
               />
 
               <image
+                className="cle-center-image"
                 href="/locationwithname.png"
                 x={CLE_CX - 170}
                 y={CLE_CY - 175}
@@ -869,7 +870,7 @@ export default function MasterPlan() {
                 Approved by DTCP authorities. Every plot number, road, and utility line
                 is legally documented and registered.
               </p>
-              <div style={{ marginTop: 32, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <div className="master-layout-actions">
                 <NavLink to="/connect" className="btn-primary" id="master-book-btn">Book Your Plot →</NavLink>
                 <a href="#specs" className="btn-outline" id="master-spec-btn">View Specs</a>
               </div>

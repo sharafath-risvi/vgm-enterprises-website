@@ -138,7 +138,7 @@ body.sls-nav-hidden .navbar {
   align-items: center;
 }
 .nav-logo-img {
-  height: 230px;
+  height: 50px;
   width: auto;
   border-radius: 6px;
   object-fit: contain;
@@ -596,20 +596,21 @@ body.sls-nav-hidden .navbar {
 }
 
 .footer-logo-img {
-  height: 170px;
+  height: 50px;
   width: auto;
   /* border-radius: 60px; */
   /* border: #E5C990 2px solid; */
   /* border: none; */
   object-fit: contain;
   transition: transform 0.3s ease;
-  margin-left: 55px;
+  /* margin-left: 55px; */
 }
 
 .footer-brand-desc {
   font-size: 14px;
   line-height: 1.8;
   color: rgba(255,255,255,0.5);
+  margin-top: 20px;
 }
 .footer-heading {
   font-size: 13px;

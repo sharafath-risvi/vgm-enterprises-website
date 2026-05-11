@@ -214,6 +214,13 @@
   letter-spacing: 0.5px;
 }
 
+.master-layout-actions {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1100px) {
   .master-layout-wrap { grid-template-columns: 1fr; }
@@ -223,6 +230,21 @@
 @media (max-width: 768px) {
   .specs-grid { grid-template-columns: 1fr 1fr; }
   .master-canvas { height: 320px; }
+  
+  .master-layout-actions {
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .master-layout-actions .btn-primary,
+  .master-layout-actions .btn-outline {
+    padding: 12px 18px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
 }
 @media (max-width: 480px) {
   .specs-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -469,7 +491,16 @@
 @media (max-width: 768px) {
   .sls-sticky {
     min-height: 100svh;
+    /* Clean, single-layer premium background for mobile */
+    background: linear-gradient(180deg, #091611 0%, #0f241d 100%);
   }
+
+  /* Remove extra noisy/layered background elements on mobile as they look broken */
+  .sls-stage-bg,
+  .sls-stage-grain {
+    display: none !important;
+  }
+
   .sls-progress-dots {
     right: 12px;
   }
@@ -485,6 +516,9 @@
   }
   .sls-slide-img-wrap {
     border-radius: 24px;
+    /* Clean up internal background for mobile */
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   }
   .sls-slide-content {
     max-width: 78%;
