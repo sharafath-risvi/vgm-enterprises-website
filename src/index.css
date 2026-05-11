@@ -249,7 +249,7 @@ body.sls-nav-hidden .navbar {
     max-width: calc(100% - 56px);
   }
   .nav-logo-img {
-    height: 144px;
+    height: 90x;
     max-width: min(54vw, 220px);
     object-fit: contain;
     object-position: left center;

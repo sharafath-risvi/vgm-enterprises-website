@@ -561,6 +561,35 @@ function VisionSection() {
               <h3 className="vision-desc-heading">{pt.title}</h3>
               <div className="vision-desc-divider" />
               <p className="vision-desc-body">{pt.desc}</p>
+
+              {/* Mobile Topic Switcher — ONLY visible on mobile via CSS */}
+              <div className="vision-mobile-switcher">
+                <button 
+                  className="vm-btn vm-btn-prev" 
+                  onClick={() => {
+                    const prev = (activeIdx - 1 + VISION_POINTS.length) % VISION_POINTS.length;
+                    activate(prev, true);
+                  }}
+                  aria-label="Previous topic"
+                >
+                  <span className="vm-arrow">‹</span>
+                </button>
+                
+                <div className="vm-content">
+                  <span className="vm-title">{pt.title}</span>
+                </div>
+
+                <button 
+                  className="vm-btn vm-btn-next" 
+                  onClick={() => {
+                    const next = (activeIdx + 1) % VISION_POINTS.length;
+                    activate(next, true);
+                  }}
+                  aria-label="Next topic"
+                >
+                  <span className="vm-arrow">›</span>
+                </button>
+              </div>
             </div>
           </div>
 
