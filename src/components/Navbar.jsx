@@ -106,7 +106,7 @@ export default function Navbar() {
       <div className="navbar-inner">
         {/* Logo */}
         <NavLink to="/" className="nav-logo" onClick={() => setMenuOpen(false)}>
-          <img src="/vgmlogo.jpeg" alt="VGM Enterprises Logo" className="nav-logo-img" />
+          <img src="/vgmlogo.png" alt="VGM Enterprises Logo" className="nav-logo-img" />
         </NavLink>
 
         <div className="nav-right">

@@ -8,8 +8,8 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand */}
           <div>
-            <div className="nav-logo" style={{ marginBottom: 16 }}>
-              <img src="/vgmlogo.jpeg" alt="VGM Enterprises Logo" className="nav-logo-img" />
+            <div className="footer-logo" >
+              <img src="/vgmlogo.png" alt="VGM Enterprises Logo" className="footer-logo-img" />
             </div>
             <p className="footer-brand-desc">
               Premium Plots at Archapakkam Thozhupedu — Your Dream Plot, Your Future Address.
