@@ -44,6 +44,9 @@ body {
   min-height: 100vh;
   background: var(--bg-light);
 }
+main {
+  width: 100%;
+}
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
@@ -220,22 +223,76 @@ body.sls-nav-hidden .navbar {
 
 /* Mobile Nav */
 @media (max-width: 900px) {
+  :root {
+    --nav-h: 92px;
+  }
+  html, body, #root, main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  .navbar {
+    height: var(--nav-h);
+    padding: 0 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  .navbar-inner {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .nav-logo {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: calc(100% - 56px);
+  }
+  .nav-logo-img {
+    height: 144px;
+    max-width: min(54vw, 220px);
+    object-fit: contain;
+    object-position: left center;
+  }
+  .nav-right {
+    flex: 0 0 auto;
+    gap: 12px;
+    margin-left: auto;
+  }
   .nav-links { display: none; }
-  .nav-hamburger { display: flex; }
+  .nav-hamburger {
+    display: flex;
+    flex: 0 0 auto;
+    padding: 8px 4px 8px 8px;
+  }
   .nav-links.open {
     display: flex;
     flex-direction: column;
     position: fixed;
     top: var(--nav-h);
-    left: 0; right: 0;
+    left: 0;
+    right: 0;
     background: rgba(22, 63, 49, 0.98);
     backdrop-filter: blur(25px);
-    padding: 24px;
+    padding: 20px 16px 24px;
     gap: 4px;
     border-bottom: 1px solid rgba(200, 169, 106, 0.15);
+    max-width: 100%;
+    overflow-x: clip;
+    z-index: 1001;
+    pointer-events: auto;
   }
   .nav-pill {
     display: none !important;
+  }
+  .nav-link,
+  .nav-main-cta {
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+    touch-action: manipulation;
   }
   .nav-link:hover {
     background: rgba(200, 169, 106, 0.08);
@@ -246,7 +303,7 @@ body.sls-nav-hidden .navbar {
   .nav-main-cta {
     margin-left: 0;
     margin-top: 12px;
-    width: fit-content;
+    width: 100%;
   }
 }
 
@@ -658,6 +715,19 @@ body.sls-nav-hidden .navbar {
   .grid-3 { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 768px) {
+  html, body, #root, main,
+  .discover-page, .connect-page, .location-page, .master-plan-page, .smart-living-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  img, video, iframe, canvas, svg {
+    max-width: 100%;
+  }
+  .section-wrap, .section-wrap-full, .section-wrap-master {
+    width: 100%;
+    max-width: 100%;
+  }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .section-wrap, .section-wrap-full { padding: 80px 5%; }
 }

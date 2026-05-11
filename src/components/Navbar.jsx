@@ -17,6 +17,7 @@ export default function Navbar() {
   const linksRef = useRef([]);
   const navActivatedRef = useRef(false);
   const lastScrollYRef = useRef(0);
+  const pendingMobilePathRef = useRef(null);
 
   const updatePillToActive = () => {
     const activeIndex = NAV_ITEMS.findIndex(item => 
@@ -79,7 +80,38 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleCTA = () => { setMenuOpen(false); navigate('/connect'); };
+  useEffect(() => {
+    if (menuOpen || !pendingMobilePathRef.current) return;
+
+    const nextPath = pendingMobilePathRef.current;
+    pendingMobilePathRef.current = null;
+
+    if (location.pathname !== nextPath) {
+      navigate(nextPath);
+    }
+  }, [menuOpen, location.pathname, navigate]);
+
+  const isMobileViewport = () => window.innerWidth <= 900;
+
+  const queueMobileNavigation = (path) => {
+    pendingMobilePathRef.current = path;
+    setMenuOpen(false);
+  };
+
+  const handleCTA = (event) => {
+    if (!isMobileViewport()) {
+      navigate('/connect');
+      return;
+    }
+    event.preventDefault();
+    queueMobileNavigation('/connect');
+  };
+
+  const handleNavItemClick = (path) => (event) => {
+    if (!isMobileViewport()) return;
+    event.preventDefault();
+    queueMobileNavigation(path);
+  };
 
   const handleMouseEnter = (e) => {
     setPillStyle({
@@ -105,7 +137,7 @@ export default function Navbar() {
     >
       <div className="navbar-inner">
         {/* Logo */}
-        <NavLink to="/" className="nav-logo" onClick={() => setMenuOpen(false)}>
+        <NavLink to="/" className="nav-logo" onClick={handleNavItemClick('/')}>
           <img src="/vgmlogo.png" alt="VGM Enterprises Logo" className="nav-logo-img" />
         </NavLink>
 
@@ -121,7 +153,7 @@ export default function Navbar() {
                 ref={el => linksRef.current[i] = el}
                 onMouseEnter={handleMouseEnter}
                 className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
-                onClick={() => setMenuOpen(false)}
+                onClick={handleNavItemClick(path)}
               >
                 {label}
               </NavLink>

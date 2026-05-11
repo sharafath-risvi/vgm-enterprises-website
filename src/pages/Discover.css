@@ -163,6 +163,18 @@
 }
 
 @media (max-width: 768px) {
+  .discover-page,
+  .discover-hero-scroll-wrapper,
+  .discover-video-hero,
+  .discover-vision,
+  .discover-trust,
+  .discover-cta-strip,
+  .site-showcase-section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
   .dvh-overlay-gradient {
     background: linear-gradient(
       0deg, 
@@ -191,6 +203,15 @@
     width: 100%;
     text-align: center;
     justify-content: center;
+  }
+
+  .vision-wrap,
+  .trust-story-wrap,
+  .cta-strip-inner,
+  .ssc-heading-wrap,
+  .ssc-rows-wrap {
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -2406,9 +2427,17 @@
 
 /* ── Responsive ────────────────────────────────────── */
 @media (max-width: 900px) {
+  .discover-vision {
+    padding-bottom: 72px;
+  }
+
+  .discover-trust {
+    padding-top: 64px;
+  }
+
   .trust-story-head {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 24px;
     margin-bottom: 72px;
   }
 
@@ -2417,22 +2446,27 @@
     text-align: left;
     padding-top: 0;
     margin-top: 0;
+    margin-left: 0;
   }
 
   .trust-story-head .section-eyebrow {
     justify-content: flex-start;
   }
 
-  .trust-story-wheel {
-    min-height: 500px;
-    max-width: 540px;
-    width: 100%;
-    margin: 0 auto;
-    padding-left: 16px;
+  .trust-story-visual {
+    min-height: 760px;
+    overflow: hidden;
+    padding-top: 18px;
   }
 
-  .trust-story-visual {
-    min-height: 500px;
+  .trust-story-wheel {
+    min-height: 100%;
+    max-width: 360px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 56px;
+    padding-left: 0;
+    justify-content: center;
   }
 
   .trust-story-image-card {
@@ -2473,12 +2507,24 @@
 }
 
 @media (max-width: 640px) {
-  .trust-story-wheel {
-    min-height: 400px;
+  .discover-vision {
+    padding-bottom: 56px;
+  }
+
+  .discover-trust {
+    padding-top: 52px;
+    padding-bottom: 5px;
   }
 
   .trust-story-visual {
-    min-height: 400px;
+    min-height: 640px;
+    padding-top: 14px;
+  }
+
+  .trust-story-wheel {
+    min-height: 100%;
+    max-width: 280px;
+    margin-top: 95px;
   }
 
   .trust-story-image-card {

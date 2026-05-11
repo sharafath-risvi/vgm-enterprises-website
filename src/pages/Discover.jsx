@@ -1616,6 +1616,7 @@ export default function Discover() {
   };
 
   const [activeTrustIndex, setActiveTrustIndex] = useState(0);
+  const [isTrustMobile, setIsTrustMobile] = useState(false);
   const trustPauseUntilRef = useRef(0);
 
   const activateTrustCard = (index) => {
@@ -1630,6 +1631,16 @@ export default function Discover() {
       }
     }, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const syncTrustViewport = () => {
+      setIsTrustMobile(window.innerWidth <= 900);
+    };
+
+    syncTrustViewport();
+    window.addEventListener('resize', syncTrustViewport);
+    return () => window.removeEventListener('resize', syncTrustViewport);
   }, []);
 
   const activeTrustItem = TRUST_STORY_ITEMS[activeTrustIndex];
@@ -1773,7 +1784,13 @@ export default function Discover() {
                   const signedOffset = offset > TRUST_STORY_ITEMS.length / 2
                     ? offset - TRUST_STORY_ITEMS.length
                     : offset;
-                  const positionMap = {
+                  const positionMap = isTrustMobile ? {
+                    '-2': { right: -8, y: 0, rotate: '9deg', scale: 0.9, opacity: 0.66, z: 8 },
+                    '-1': { right: 10, y: 94, rotate: '6deg', scale: 0.95, opacity: 0.82, z: 12 },
+                    '0': { right: 42, y: 196, rotate: '2deg', scale: 1, opacity: 1, z: 20 },
+                    '1': { right: 12, y: 302, rotate: '-3deg', scale: 0.95, opacity: 0.82, z: 12 },
+                    '2': { right: -6, y: 404, rotate: '-5deg', scale: 0.9, opacity: 0.66, z: 8 },
+                  } : {
                     '-2': { right: -50, y: -268, rotate: '9deg', scale: 0.9, opacity: 0.66, z: 8 },
                     '-1': { right: -24, y: -148, rotate: '6deg', scale: 0.95, opacity: 0.82, z: 12 },
                     '0': { right: 76, y: 0, rotate: '2deg', scale: 1, opacity: 1, z: 20 },
@@ -1799,6 +1816,7 @@ export default function Discover() {
                       type="button"
                       className={`trust-story-image-card${isActive ? ' is-active' : ''}`}
                       style={{
+                        left: 'auto',
                         right: `${position.right}px`,
                         transform: `translate3d(0, calc(-50% + ${position.y}px), 0) rotate(${renderedRotate}) scale(${renderedScale})`,
                         opacity: position.opacity,
