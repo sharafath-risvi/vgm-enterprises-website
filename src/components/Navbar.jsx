@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 const NAV_ITEMS = [
@@ -6,6 +6,28 @@ const NAV_ITEMS = [
   { label: 'Master Plan', path: '/master-plan' },
   { label: 'Connect', path: '/connect' },
 ];
+
+const MOBILE_NAV_MQ = '(max-width: 900px)';
+
+function isNavPathActive(path, pathname) {
+  return path === '/' ? pathname === '/' : pathname.startsWith(path);
+}
+
+function useMobileNavLayout() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(MOBILE_NAV_MQ).matches : false
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_NAV_MQ);
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return isMobile;
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -17,9 +39,11 @@ export default function Navbar() {
   const linksRef = useRef([]);
   const navActivatedRef = useRef(false);
   const lastScrollYRef = useRef(0);
+  const mobileNavTimerRef = useRef(null);
+  const isMobileNav = useMobileNavLayout();
 
-  const updatePillToActive = () => {
-    const activeIndex = NAV_ITEMS.findIndex(item => 
+  const updatePillToActive = useCallback(() => {
+    const activeIndex = NAV_ITEMS.findIndex(item =>
       item.path === '/' ? location.pathname === '/' : location.pathname.startsWith(item.path)
     );
     if (activeIndex >= 0 && linksRef.current[activeIndex]) {
@@ -32,17 +56,29 @@ export default function Navbar() {
     } else {
       setPillStyle(prev => ({ ...prev, opacity: 0 }));
     }
-  };
+  }, [location.pathname]);
 
   useEffect(() => {
     const timer = setTimeout(updatePillToActive, 50);
     return () => clearTimeout(timer);
+  }, [updatePillToActive]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setMenuOpen(false);
+      setVisible(true);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
   useEffect(() => {
-    setMenuOpen(false);
-    setVisible(true);
-  }, [location.pathname]);
+    return () => {
+      if (mobileNavTimerRef.current != null) {
+        clearTimeout(mobileNavTimerRef.current);
+        mobileNavTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -77,20 +113,40 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [menuOpen]);
 
-  const handleCTA = (event) => {
-    navigate('/connect');
-    if (window.innerWidth <= 900) {
+  const scheduleMobileNavigate = useCallback(
+    path => {
+      if (mobileNavTimerRef.current != null) {
+        clearTimeout(mobileNavTimerRef.current);
+        mobileNavTimerRef.current = null;
+      }
       setMenuOpen(false);
+      mobileNavTimerRef.current = window.setTimeout(() => {
+        mobileNavTimerRef.current = null;
+        navigate(path);
+      }, 150);
+    },
+    [navigate]
+  );
+
+  const handleMobileNavAnchorClick = useCallback(
+    path => event => {
+      event.preventDefault();
+      event.stopPropagation();
+      scheduleMobileNavigate(path);
+    },
+    [scheduleMobileNavigate]
+  );
+
+  const handleCTA = event => {
+    if (isMobileNav) {
+      event.preventDefault();
+      scheduleMobileNavigate('/connect');
+    } else {
+      navigate('/connect');
     }
   };
 
-  const handleNavItemClick = (path) => (event) => {
-    if (window.innerWidth <= 900) {
-      setMenuOpen(false);
-    }
-  };
-
-  const handleMouseEnter = (e) => {
+  const handleMouseEnter = e => {
     setPillStyle({
       left: e.currentTarget.offsetLeft,
       width: e.currentTarget.offsetWidth,
@@ -113,33 +169,51 @@ export default function Navbar() {
       }}
     >
       <div className="navbar-inner">
-        {/* Logo */}
-        <NavLink to="/" className="nav-logo" onClick={handleNavItemClick('/')}>
-          <img src="/vgmlogo.png" alt="VGM Enterprises Logo" className="nav-logo-img" />
-        </NavLink>
+        {isMobileNav ? (
+          <a href="/" className="nav-logo" onClick={handleMobileNavAnchorClick('/')}>
+            <img src="/vgmlogo.png" alt="VGM Enterprises Logo" className="nav-logo-img" />
+          </a>
+        ) : (
+          <NavLink to="/" className="nav-logo">
+            <img src="/vgmlogo.png" alt="VGM Enterprises Logo" className="nav-logo-img" />
+          </NavLink>
+        )}
 
         <div className="nav-right">
-          {/* Desktop Links */}
           <div className={`nav-links${menuOpen ? ' open' : ''}`} onMouseLeave={handleMouseLeave}>
             <div className="nav-pill" style={pillStyle} />
-            {NAV_ITEMS.map(({ label, path }, i) => (
-              <NavLink
-                key={path}
-                to={path}
-                end={path === '/'}
-                ref={el => linksRef.current[i] = el}
-                onMouseEnter={handleMouseEnter}
-                className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
-                onClick={handleNavItemClick(path)}
-              >
-                {label}
-              </NavLink>
-            ))}
-            <button className="nav-main-cta" onClick={handleCTA}>Schedule Visit</button>
+            {isMobileNav
+              ? NAV_ITEMS.map(({ label, path }) => {
+                  const active = isNavPathActive(path, location.pathname);
+                  return (
+                    <a
+                      key={path}
+                      href={path}
+                      className={`nav-link${active ? ' active' : ''}`}
+                      aria-current={active ? 'page' : undefined}
+                      onClick={handleMobileNavAnchorClick(path)}
+                    >
+                      {label}
+                    </a>
+                  );
+                })
+              : NAV_ITEMS.map(({ label, path }, i) => (
+                  <NavLink
+                    key={path}
+                    to={path}
+                    end={path === '/'}
+                    ref={el => (linksRef.current[i] = el)}
+                    onMouseEnter={handleMouseEnter}
+                    className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+                  >
+                    {label}
+                  </NavLink>
+                ))}
+            <button type="button" className="nav-main-cta" onClick={handleCTA}>Schedule Visit</button>
           </div>
 
-          {/* Hamburger */}
           <button
+            type="button"
             className="nav-hamburger"
             aria-label="Toggle menu"
             onClick={() => setMenuOpen(o => !o)}

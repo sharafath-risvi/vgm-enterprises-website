@@ -61,7 +61,7 @@ export default function Footer() {
               <span>info@vgmenterprises.in</span>
             </div>
             <NavLink
-              to="/connect"
+              to="/connect#site-visit-form"
               className="btn-gold"
               style={{ marginTop: 20, fontSize: 13, padding: '12px 28px' }}
             >
