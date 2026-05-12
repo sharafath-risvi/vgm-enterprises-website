@@ -36,12 +36,12 @@ export default function Footer() {
           <div>
             <h3 className="footer-heading">Amenities</h3>
             <ul className="footer-links">
-              <li><a href="#amenities">Clubhouse</a></li>
-              <li><a href="#amenities">Solar Energy</a></li>
-              <li><a href="#amenities">Rainwater Harvesting</a></li>
-              <li><a href="#amenities">24/7 CCTV</a></li>
-              <li><a href="#amenities">Tree Plantation</a></li>
-              <li><a href="#amenities">Biogas System</a></li>
+              <li><NavLink to="/master-plan#connected-ecosystem">Rainwater Harvesting</NavLink></li>
+              <li><NavLink to="/master-plan#connected-ecosystem">Sustainable Living</NavLink></li>
+              <li><NavLink to="/master-plan#connected-ecosystem">Smart Electricity</NavLink></li>
+              <li><NavLink to="/master-plan#connected-ecosystem">24×7 CCTV Security</NavLink></li>
+              <li><NavLink to="/master-plan#connected-ecosystem">Planned Community</NavLink></li>
+              <li><NavLink to="/master-plan#connected-ecosystem">Tree Plantation</NavLink></li>
             </ul>
           </div>
 

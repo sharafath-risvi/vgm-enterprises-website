@@ -290,20 +290,44 @@ body.sls-nav-hidden .navbar {
     width: 100%;
     max-width: 100%;
     position: relative;
-    z-index: 1;
-    pointer-events: auto;
+    z-index: 5; /* Higher than potential overlays */
+    pointer-events: auto !important;
     touch-action: manipulation;
   }
-  .nav-link:hover {
-    background: rgba(200, 169, 106, 0.08);
+  .nav-link {
+    padding: 18px 24px;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    margin-bottom: 4px;
+  }
+  .nav-link:hover, .nav-link:active {
+    background: rgba(200, 169, 106, 0.1);
   }
   .nav-link.active {
     background: rgba(200, 169, 106, 0.15);
+    color: var(--gold);
+    font-weight: 600;
   }
   .nav-main-cta {
-    margin-left: 0;
-    margin-top: 12px;
-    width: 100%;
+    margin: 12px 0 0;
+    padding: 16px;
+    font-size: 15px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .nav-hamburger {
+    display: flex;
+    flex: 0 0 auto;
+    padding: 12px;
+    margin-right: -8px;
+    z-index: 1002; /* Above the links container */
   }
 }
 

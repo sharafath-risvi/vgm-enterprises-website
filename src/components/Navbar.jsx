@@ -17,7 +17,6 @@ export default function Navbar() {
   const linksRef = useRef([]);
   const navActivatedRef = useRef(false);
   const lastScrollYRef = useRef(0);
-  const pendingMobilePathRef = useRef(null);
 
   const updatePillToActive = () => {
     const activeIndex = NAV_ITEMS.findIndex(item => 
@@ -41,20 +40,18 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const onRouteEnter = () => {
-      navActivatedRef.current = false;
-      lastScrollYRef.current = window.scrollY;
-      setVisible(false);
-      setScrolled(false);
-      setMenuOpen(false);
-    };
-
-    onRouteEnter();
+    setMenuOpen(false);
+    setVisible(true);
   }, [location.pathname]);
 
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
+
+      if (menuOpen) {
+        lastScrollYRef.current = currentScrollY;
+        return;
+      }
 
       if (!navActivatedRef.current) {
         if (Math.abs(currentScrollY - lastScrollYRef.current) >= 8 || currentScrollY > 8) {
@@ -78,39 +75,19 @@ export default function Navbar() {
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (menuOpen || !pendingMobilePathRef.current) return;
-
-    const nextPath = pendingMobilePathRef.current;
-    pendingMobilePathRef.current = null;
-
-    if (location.pathname !== nextPath) {
-      navigate(nextPath);
-    }
-  }, [menuOpen, location.pathname, navigate]);
-
-  const isMobileViewport = () => window.innerWidth <= 900;
-
-  const queueMobileNavigation = (path) => {
-    pendingMobilePathRef.current = path;
-    setMenuOpen(false);
-  };
+  }, [menuOpen]);
 
   const handleCTA = (event) => {
-    if (!isMobileViewport()) {
-      navigate('/connect');
-      return;
+    navigate('/connect');
+    if (window.innerWidth <= 900) {
+      setMenuOpen(false);
     }
-    event.preventDefault();
-    queueMobileNavigation('/connect');
   };
 
   const handleNavItemClick = (path) => (event) => {
-    if (!isMobileViewport()) return;
-    event.preventDefault();
-    queueMobileNavigation(path);
+    if (window.innerWidth <= 900) {
+      setMenuOpen(false);
+    }
   };
 
   const handleMouseEnter = (e) => {
@@ -131,7 +108,7 @@ export default function Navbar() {
       role="navigation" 
       aria-label="Main navigation"
       style={{ 
-        transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+        transform: (visible || menuOpen) ? 'translateY(0)' : 'translateY(-100%)',
         transition: 'transform 0.4s ease, background-color 0.3s ease, padding 0.3s ease'
       }}
     >

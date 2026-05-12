@@ -231,7 +231,7 @@ function ConnectedEcosystemSection() {
   }, []);
 
   return (
-    <section ref={secRef} className="cle-section" aria-label="Connected Living Ecosystem">
+    <section ref={secRef} id="connected-ecosystem" className="cle-section" aria-label="Connected Living Ecosystem">
       <div className="cle-bg-mesh" aria-hidden="true" />
 
       <div className="section-wrap-master">
