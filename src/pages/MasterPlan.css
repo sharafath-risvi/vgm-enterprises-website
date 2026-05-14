@@ -383,7 +383,8 @@
   align-items: center;
   /* border-radius: 300px; */
   justify-content: center;
-  padding: min(7vh, 64px) 50%;
+  /* padding: min(7vh, 64px) 50%; */
+  padding: clamp(20px, 4vw, 60px);
   opacity: 0;
   transform: translate3d(0, 32px, 0) scale(0.992);
   will-change: transform, opacity;
@@ -410,12 +411,21 @@
 
 /* Image Wrap & Image */
 .sls-slide-media {
-  position: absolute;
+  /* position: absolute;
   inset: clamp(104px, 14vh, 150px) clamp(7vw, 96px) clamp(72px, 10vh, 96px) 34%;
   z-index: 4;
   display: flex;
   align-items: center;
+  justify-content: center; */
+  position: absolute;
+  /* inset: clamp(80px, 10vh, 120px)
+         clamp(40px, 6vw, 80px)
+         clamp(60px, 8vh, 90px)
+         clamp(40px, 6vw, 80px); */
+
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 .sls-slide-img-wrap {
   position: relative;
@@ -426,7 +436,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
-  overflow: hidden;
+  /* overflow: hidden; */
   /* border-radius: 30px; */
   /* border: 1px solid rgba(214, 189, 144, 0.58); */
   background:
@@ -441,7 +451,9 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
-  /* padding: clamp(12px, 1.8vw, 18px); */
+  margin-top: 0px;
+  /* padding: clamp(10px, 2vw, 32px); */
+  /* padding-top: 20px; */
   /* filter: brightness(1.12) contrast(1.08) saturate(1.08); */
 }
 
