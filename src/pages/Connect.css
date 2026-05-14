@@ -12,7 +12,9 @@
   text-align: left;
   padding: calc(var(--nav-h) + 60px) 8% 80px;
   overflow: hidden;
-  background: #000;
+  /* Cinematic gradient fallback — shown while hero image loads on deployment.
+     Matches the overlay palette so there is no black flash before the image appears. */
+  background: radial-gradient(ellipse at 20% 50%, #071e14 0%, #050e09 60%, #030805 100%);
 }
 
 .connect-hero-bg {

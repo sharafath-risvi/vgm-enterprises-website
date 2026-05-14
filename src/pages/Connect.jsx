@@ -82,9 +82,12 @@ export default function Connect() {
       <section className="connect-hero" aria-label="Connect hero">
         <div className="connect-hero-bg" aria-hidden="true">
           <img
-            src="bgimage3 4.png"
+            src="/bg3image.webp"
             alt="Luxury Architectural Real Estate"
             className="connect-hero-img"
+            fetchpriority="high"
+            loading="eager"
+            decoding="sync"
           />
           <div className="connect-hero-overlay" />
           <div className="connect-hero-gradient-bottom" />

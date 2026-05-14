@@ -1789,6 +1789,23 @@ export default function Discover() {
             preload="auto"
             className="dvh-video"
             onEnded={handleVideoEnded}
+            onLoadedMetadata={(e) => {
+              // Force browser to decode and paint frame 0 immediately
+              e.currentTarget.currentTime = 0;
+            }}
+            onCanPlay={(e) => {
+              // Draw first frame to canvas for the section background poster
+              try {
+                const canvas = posterCanvasRef.current;
+                if (!canvas || heroPoster) return;
+                const v = e.currentTarget;
+                canvas.width = v.videoWidth || 1920;
+                canvas.height = v.videoHeight || 1080;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(v, 0, 0, canvas.width, canvas.height);
+                setHeroPoster(canvas.toDataURL('image/jpeg', 0.85));
+              } catch (_) { /* silent — gradient fallback is used */ }
+            }}
             // loop removed to naturally stop on final frame
             // autoPlay removed to start frozen
           >
