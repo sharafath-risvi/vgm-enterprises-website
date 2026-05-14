@@ -680,6 +680,7 @@ function SustainableLivingShowcase() {
               i > activeIdx ? 'is-after' : '',
             ].filter(Boolean).join(' ')}
             aria-hidden={i !== activeIdx}
+            style={{ '--bg-img': `url("${s.img}")` }}
           >
             <div className="sls-slide-media">
               <div className="sls-slide-img-wrap">
