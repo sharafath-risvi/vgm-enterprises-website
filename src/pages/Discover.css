@@ -15,18 +15,14 @@
   width: 100%;
   min-height: 100svh;
   height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   /* Cinematic dark-green gradient fallback — visible before the first video frame decodes.
      This replaces the pure black flash that appeared on deployment. */
   background: radial-gradient(ellipse at 60% 50%, #0d3b28 0%, #071e14 50%, #030d09 100%);
   background-size: cover;
-}
-
-@media (max-height: 820px) {
-  .discover-video-hero {
-    padding-bottom: 40px;
-  }
 }
 
 .dvh-video {
@@ -70,22 +66,44 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  /* Responsive vertical padding: scales between nav height + safety margin and a maximum.
-     This ensures the badge at the top is never pushed out of view on shorter laptop screens. */
-  padding: clamp(calc(var(--nav-h) + 20px), 15vh, 180px) 5% clamp(24px, 6vh, 60px);
+  /* Navbar safe spacing — aligns naturally from the top */
+  padding-top: calc(var(--nav-h, 80px) + 24px);
+  padding-bottom: 32px;
+  padding-left: 5%;
+  padding-right: 5%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   flex: 1;
   text-align: left;
   transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.discover-title-wrapper {
+  margin-top: 32px;
 }
 
 .dvh-interactive-content.faded {
   opacity: 0;
   transform: translateY(-20px);
   pointer-events: none;
+}
+
+@media (max-height: 820px) {
+  .discover-video-hero {
+    padding-bottom: 32px;
+  }
+
+  .dvh-interactive-content {
+    padding-top: calc(var(--nav-h, 80px) + 16px);
+    padding-bottom: 24px;
+    gap: 20px;
+  }
+
+  .discover-title-wrapper {
+    margin-top: 48px;
+  }
 }
 
 .dvh-badge {

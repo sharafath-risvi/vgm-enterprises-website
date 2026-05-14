@@ -1816,20 +1816,22 @@ export default function Discover() {
           <div className={`dvh-overlay-gradient ${hasScrolled ? 'faded' : ''}`} />
           
           <div className={`dvh-interactive-content ${hasScrolled ? 'faded' : ''}`}>
-            <div className="dvh-badge reveal">PREMIUM PLOTTED DEVELOPMENT</div>
-            
-            <h1 className="dvh-title reveal delay-1">
-              Where Every<br />
-              <span className="dvh-title-gold">Investment Finds</span><br />
-              Its Future
-            </h1>
-            
-            <p className="dvh-subtitle reveal delay-2">
-              Experience the epitome of luxury real estate. Discover meticulously planned landscapes and world-class infrastructure designed to elevate your standard of living.
-            </p>
-            
-            <div className="dvh-actions reveal delay-3">
-              <NavLink to="/master-plan" className="btn-gold">Explore Master Plan</NavLink>
+            <div className="discover-title-wrapper">
+              <div className="dvh-badge reveal">PREMIUM PLOTTED DEVELOPMENT</div>
+              
+              <h1 className="dvh-title reveal delay-1">
+                Where Every<br />
+                <span className="dvh-title-gold">Investment Finds</span><br />
+                Its Future
+              </h1>
+              
+              <p className="dvh-subtitle reveal delay-2">
+                Experience the epitome of luxury real estate. Discover meticulously planned landscapes and world-class infrastructure designed to elevate your standard of living.
+              </p>
+              
+              <div className="dvh-actions reveal delay-3">
+                <NavLink to="/master-plan" className="btn-gold">Explore Master Plan</NavLink>
+              </div>
             </div>
           </div>
 
