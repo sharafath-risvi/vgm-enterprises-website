@@ -1591,7 +1591,9 @@ export default function Discover() {
   const heroRef = useRef(null);
   const particleRef = useRef(null);
   const heroVideoRef = useRef(null);
+  const posterCanvasRef = useRef(null);
   const lastScrollY = useRef(0);
+  const [heroPoster, setHeroPoster] = useState(null);
   const [hasScrolled, setHasScrolled] = useState(false);
   
   useEffect(() => {
@@ -1634,6 +1636,47 @@ export default function Discover() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // ── Poster frame: capture first video frame to eliminate black flash ──
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+
+    const captureFirstFrame = () => {
+      // Seek to the very beginning to force the browser to paint frame 0
+      video.currentTime = 0;
+    };
+
+    const onSeeked = () => {
+      // Once seeked, draw to an offscreen canvas to get a data URL
+      try {
+        const canvas = posterCanvasRef.current;
+        if (!canvas) return;
+        canvas.width = video.videoWidth || 1920;
+        canvas.height = video.videoHeight || 1080;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setHeroPoster(dataUrl);
+      } catch (e) {
+        // Cross-origin or decode error — silently ignore, gradient fallback is used
+      }
+    };
+
+    if (video.readyState >= 1) {
+      // Metadata already loaded
+      captureFirstFrame();
+    } else {
+      video.addEventListener('loadedmetadata', captureFirstFrame, { once: true });
+    }
+
+    video.addEventListener('seeked', onSeeked, { once: true });
+
+    return () => {
+      video.removeEventListener('loadedmetadata', captureFirstFrame);
+      video.removeEventListener('seeked', onSeeked);
+    };
   }, []);
 
   const handleVideoEnded = () => {
@@ -1732,11 +1775,18 @@ export default function Discover() {
     <div className="discover-page page-enter">
       {/* ===== HERO WRAPPER ===== */}
       <div className="discover-hero-scroll-wrapper">
-        <section className="discover-video-hero" aria-label="Discover cinematic video hero">
+        {/* Offscreen canvas for first-frame poster extraction */}
+        <canvas ref={posterCanvasRef} style={{ display: 'none' }} aria-hidden="true" />
+        <section
+          className="discover-video-hero"
+          aria-label="Discover cinematic video hero"
+          style={heroPoster ? { backgroundImage: `url(${heroPoster})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+        >
           <video
             ref={heroVideoRef}
             muted
             playsInline
+            preload="auto"
             className="dvh-video"
             onEnded={handleVideoEnded}
             // loop removed to naturally stop on final frame

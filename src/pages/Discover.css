@@ -17,7 +17,10 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: #040c08;
+  /* Cinematic dark-green gradient fallback — visible before the first video frame decodes.
+     This replaces the pure black flash that appeared on deployment. */
+  background: radial-gradient(ellipse at 60% 50%, #0d3b28 0%, #071e14 50%, #030d09 100%);
+  background-size: cover;
 }
 
 .dvh-video {
