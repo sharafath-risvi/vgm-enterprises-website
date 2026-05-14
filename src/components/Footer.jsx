@@ -75,6 +75,15 @@ export default function Footer() {
           <span>© {year} VGM Enterprises. All rights reserved.</span>
           <span>DTCP Approved · RERA Registered · Archapakkam Thozhupedu</span>
         </div>
+
+        {/* Developer credit */}
+        <div className="footer-dev-credit">
+          <div className="footer-dev-divider" aria-hidden="true" />
+          <p className="footer-dev-text">
+            Designed &amp; Developed by{' '}
+            <span className="footer-dev-name">Thajira Techworks</span>
+          </p>
+        </div>
       </div>
     </footer>
   );
