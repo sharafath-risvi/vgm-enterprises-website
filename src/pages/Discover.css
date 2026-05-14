@@ -64,7 +64,9 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: calc(var(--nav-h) + 60px) 5% 40px;
+  /* Responsive vertical padding: scales between nav height + safety margin and a maximum.
+     This ensures the badge at the top is never pushed out of view on shorter laptop screens. */
+  padding: clamp(calc(var(--nav-h) + 20px), 15vh, 180px) 5% clamp(24px, 6vh, 60px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -80,12 +82,13 @@
 
 .dvh-badge {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: clamp(0.65rem, 0.8vw, 0.75rem);
   font-weight: 700;
   letter-spacing: 3px;
   color: #C8A96A;
   text-transform: uppercase;
-  margin-bottom: 24px;
+  /* Responsive bottom margin to keep content compact on shorter displays */
+  margin-bottom: clamp(12px, 2.5vh, 24px);
   padding: 6px 16px;
   border: 1px solid rgba(200, 169, 106, 0.4);
   border-radius: 50px;
@@ -95,12 +98,13 @@
 
 .dvh-title {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 6.5vw, 6rem);
+  font-size: clamp(2.5rem, 6vw, 6rem);
   font-weight: 600;
   color: var(--bg-white);
   line-height: 1.05;
   letter-spacing: -1.5px;
-  margin: 0 0 28px;
+  /* Responsive bottom margin */
+  margin: 0 0 clamp(16px, 3vh, 28px);
 }
 
 .dvh-title-gold {
@@ -114,11 +118,12 @@
 }
 
 .dvh-subtitle {
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.8;
   max-width: 520px;
-  margin: 0 0 48px;
+  /* Responsive bottom margin */
+  margin: 0 0 clamp(24px, 5vh, 48px);
 }
 
 .dvh-actions {
