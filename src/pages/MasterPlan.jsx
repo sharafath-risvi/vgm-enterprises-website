@@ -235,7 +235,7 @@ function ConnectedEcosystemSection() {
       <div className="cle-bg-mesh" aria-hidden="true" />
 
       <div className="section-wrap-master">
-        {/* Heading */} 
+        {/* Heading */}
         <div className="cle-header">
           <div className="section-eyebrow cle-eyebrow">Connected Living Ecosystem</div>
           <h2 className="cle-main-title">
@@ -406,7 +406,7 @@ function ConnectedEcosystemSection() {
 
               <image
                 className="cle-center-image"
-                href="/locationwithname.png"
+                href="/locationwithname.webp"
                 x={CLE_CX - 170}
                 y={CLE_CY - 175}
                 width={340}
@@ -515,7 +515,7 @@ const SUSTAIN_STORIES = [
 ];
 
 function SustainableLivingShowcase() {
-  const outerRef  = useRef(null);
+  const outerRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const activeIdxRef = useRef(0);
   const isAnimatingRef = useRef(false);
@@ -692,7 +692,7 @@ function SustainableLivingShowcase() {
                 <div className="sls-slide-overlay" />
                 <div className="sls-slide-overlay-bottom" />
 
-                
+
               </div>
             </div>
           </div>
