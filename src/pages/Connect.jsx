@@ -82,7 +82,7 @@ export default function Connect() {
       <section className="connect-hero" aria-label="Connect hero">
         <div className="connect-hero-bg" aria-hidden="true">
           <img
-            src="bg3image.png"
+            src="bgimage3 2.png"
             alt="Luxury Architectural Real Estate"
             className="connect-hero-img"
           />
