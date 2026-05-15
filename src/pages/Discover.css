@@ -3722,3 +3722,835 @@
     font-size: 0.88rem;
   }
 }
+
+
+/* ============================================================
+   VSD — 23 SUCCESSFUL DEVELOPMENTS (Luxury Showcase)
+   ============================================================ */
+
+/* ── Section shell ──────────────────────────────────────── */
+.vsd-section {
+  position: relative;
+  background: linear-gradient(160deg,
+    #071a10 0%,
+    #0a2318 18%,
+    #061409 45%,
+    #040f07 70%,
+    #020b05 100%);
+  /* No explicit height — section height = heading zone + runway */
+  overflow-x: clip; /* clip without breaking position:sticky */
+  isolation: isolate;
+}
+
+/* Heading scrolls normally */
+.vsd-heading-zone {
+  position: relative;
+  z-index: 5;
+  padding: 130px 0 56px;
+}
+
+/* Runway: position:relative, height set by JS = 100vh + track.maxScrollX */
+.vsd-cards-runway {
+  position: relative;
+  /* height injected inline by JS */
+}
+
+/* Sticky panel: pins inside the runway, always 100svh tall */
+.vsd-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 28px;
+  z-index: 5;
+}
+
+/* ── Background Wrapper (clips absolute children) ── */
+.vsd-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ── Brand parallax glows ── */
+.vsd-bg-parallax {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Gold top-left spill */
+    radial-gradient(ellipse 70% 55% at 10% 0%,
+      rgba(200, 169, 106, 0.10) 0%, transparent 55%),
+    /* Gold bottom-right spill */
+    radial-gradient(ellipse 60% 50% at 90% 100%,
+      rgba(200, 169, 106, 0.07) 0%, transparent 55%),
+    /* Cinematic green center glow */
+    radial-gradient(ellipse 80% 60% at 50% 50%,
+      rgba(11, 61, 46, 0.55) 0%, transparent 65%),
+    /* Deep green left pillar */
+    radial-gradient(ellipse 40% 80% at 0% 50%,
+      rgba(10, 50, 35, 0.45) 0%, transparent 70%),
+    /* Deep green right pillar */
+    radial-gradient(ellipse 40% 80% at 100% 50%,
+      rgba(10, 50, 35, 0.35) 0%, transparent 70%);
+}
+
+/* Cinematic vignette overlay */
+.vsd-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(4, 15, 8, 0.72) 0%,
+      rgba(4, 15, 8, 0.0)  12%,
+      rgba(4, 15, 8, 0.0)  88%,
+      rgba(4, 15, 8, 0.80) 100%),
+    linear-gradient(180deg,
+      rgba(200, 169, 106, 0.04) 0%,
+      transparent 6%);
+}
+
+/* ── Gold floating particles ── */
+.vsd-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.vsd-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 169, 106, 0.95) 0%, transparent 70%);
+  animation: vsdFloat var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate;
+  will-change: transform, opacity;
+}
+
+.vsd-particle--1 { width: 3px;  height: 3px;  top:  8%; left:  6%; --dur: 8.2s; --delay: 0s;   opacity: 0.55; }
+.vsd-particle--2 { width: 2px;  height: 2px;  top: 30%; left: 91%; --dur: 6.5s; --delay: 1.2s; opacity: 0.45; }
+.vsd-particle--3 { width: 4px;  height: 4px;  top: 65%; left: 14%; --dur: 9.1s; --delay: 0.6s; opacity: 0.40; }
+.vsd-particle--4 { width: 2px;  height: 2px;  top: 78%; left: 73%; --dur: 7.4s; --delay: 2.0s; opacity: 0.50; }
+.vsd-particle--5 { width: 3px;  height: 3px;  top: 20%; left: 52%; --dur: 10s;  --delay: 0.9s; opacity: 0.35; }
+.vsd-particle--6 { width: 2px;  height: 2px;  top: 88%; left: 38%; --dur: 7.8s; --delay: 1.8s; opacity: 0.45; }
+
+@keyframes vsdFloat {
+  0%   { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-30px) translateX(12px); }
+}
+
+/* ── Inner container ── */
+.vsd-inner {
+  position: relative;
+  z-index: 5;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 5%;
+}
+
+
+
+/* ── Header block ── */
+.vsd-header {
+  text-align: center;
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vsd-header--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Eyebrow */
+.vsd-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: #C8A96A;
+  margin-bottom: 28px;
+  opacity: 0.88;
+}
+
+.vsd-eyebrow-line {
+  display: inline-block;
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #C8A96A 80%);
+}
+
+.vsd-eyebrow-line:last-child {
+  background: linear-gradient(90deg, #C8A96A 20%, transparent);
+}
+
+/* Main heading — unchanged */
+.vsd-main-title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  margin: 0 0 32px;
+  color: #ffffff;
+}
+
+.vsd-title-counter {
+  display: inline-block;
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #f7e8b0 0%, #C8A96A 40%, #e2b96a 70%, #C8A96A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 32px rgba(200, 169, 106, 0.50));
+  letter-spacing: -0.04em;
+}
+
+.vsd-title-text {
+  color: rgba(255, 255, 255, 0.90);
+  font-weight: 500;
+}
+
+.vsd-title-gold {
+  font-style: italic;
+  background: linear-gradient(110deg, #f5e4a0 0%, #C8A96A 40%, #e8c97a 80%, #C8A96A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(200, 169, 106, 0.40));
+}
+
+/* Subtitle pills */
+.vsd-subtitle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 44px;
+}
+
+.vsd-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 40px;
+  background: rgba(11, 61, 46, 0.40);
+  border: 1px solid rgba(200, 169, 106, 0.28);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.80);
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.vsd-stat-pill:hover {
+  background: rgba(11, 61, 46, 0.65);
+  border-color: rgba(200, 169, 106, 0.52);
+  transform: translateY(-2px);
+}
+
+.vsd-stat-icon { font-size: 1rem; }
+
+/* Divider */
+.vsd-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.vsd-divider-line {
+  display: block;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 106, 0.55), transparent);
+}
+
+.vsd-divider-diamond {
+  font-size: 0.72rem;
+  color: #C8A96A;
+  filter: drop-shadow(0 0 7px rgba(200, 169, 106, 0.6));
+}
+
+/* ── Scroll hint ──────────────────────────────────────────── */
+.vsd-scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s 0.4s ease, transform 0.7s 0.4s ease;
+}
+
+.vsd-scroll-hint--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vsd-hint-text {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(200, 169, 106, 0.60);
+  font-weight: 600;
+}
+
+.vsd-hint-arrow {
+  font-size: 0.85rem;
+  color: rgba(200, 169, 106, 0.45);
+  animation: vsdHintPulse 1.8s ease-in-out infinite alternate;
+}
+
+.vsd-hint-arrow:last-child {
+  animation-delay: 0.9s;
+}
+
+@keyframes vsdHintPulse {
+  0%   { opacity: 0.3; transform: translateX(0); }
+  100% { opacity: 0.9; transform: translateX(4px); }
+}
+
+/* ── Horizontal track outer wrapper ── */
+.vsd-track-outer {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* Hide horizontal overflow on desktop */
+}
+
+/* Fade edges */
+.vsd-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.vsd-edge--left {
+  left: 0;
+  background: linear-gradient(to right,
+    rgba(7, 26, 16, 0.95) 0%,
+    transparent 100%);
+}
+
+.vsd-edge--right {
+  right: 0;
+  background: linear-gradient(to left,
+    rgba(7, 26, 16, 0.95) 0%,
+    transparent 100%);
+}
+
+/* ── Horizontal scroll track ── */
+.vsd-track {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(300px, 28vw, 440px);
+  /* Cap height so both rows always fit in the sticky panel (100svh - non-card elements) */
+  max-height: calc(100svh - 160px);
+  gap: clamp(16px, 2vw, 28px);
+  padding: 20px 5% 28px;
+  box-sizing: border-box;
+  overflow: visible;
+  will-change: transform;
+}
+
+/* ── Individual Card — premium by default ── */
+.vsd-card {
+  position: relative;
+  /* Padding clamps down on smaller viewports so both rows remain visible */
+  padding: clamp(24px, 2.5vh, 38px) 32px clamp(20px, 2vh, 34px);
+  border-radius: 22px;
+
+  /* Default = what was previously the hover state: richly lit, luxurious */
+  background: linear-gradient(145deg,
+    rgba(17, 72, 50, 0.85) 0%,
+    rgba(12, 46, 32, 0.90) 60%,
+    rgba(8, 28, 18, 0.94) 100%);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(200, 169, 106, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(200, 169, 106, 0.22),
+    0 10px 40px rgba(0, 0, 0, 0.55),
+    0 0 36px rgba(200, 169, 106, 0.14),
+    inset 0 1px 0 rgba(200, 169, 106, 0.20),
+    inset 0 0 40px rgba(11, 61, 46, 0.28);
+
+  overflow: hidden;
+  cursor: default;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+
+  /* Reveal animation */
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.vsd-card--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Hover — elevate slightly beyond the already-premium default */
+.vsd-card:hover {
+  border-color: rgba(200, 169, 106, 0.80);
+  background: linear-gradient(145deg,
+    rgba(20, 84, 58, 0.96) 0%,
+    rgba(14, 54, 38, 0.98) 60%,
+    rgba(9, 32, 22, 1.00) 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(200, 169, 106, 0.42),
+    0 20px 64px rgba(0, 0, 0, 0.65),
+    0 0 56px rgba(200, 169, 106, 0.22),
+    inset 0 1px 0 rgba(200, 169, 106, 0.28),
+    inset 0 0 48px rgba(11, 61, 46, 0.38);
+  transform: translateY(-8px) scale(1.022);
+}
+
+.vsd-card:hover .vsd-card-glow { opacity: 0.75; }
+
+/* Corner ambient glow — always on at medium opacity */
+.vsd-card-glow {
+  position: absolute;
+  top: -45px;
+  right: -45px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 169, 106, 0.28) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0.50; /* visible on every card by default */
+  transition: opacity 0.4s ease;
+}
+
+/* Serial number — larger, more readable */
+.vsd-card-num {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: rgba(200, 169, 106, 0.65); /* rich gold by default */
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  transition: color 0.3s ease;
+  user-select: none;
+}
+
+.vsd-card:hover .vsd-card-num {
+  color: rgba(200, 169, 106, 0.90);
+}
+
+/* Gold divider accent */
+.vsd-card-divider {
+  width: 44px;
+  height: 2px;
+  background: linear-gradient(90deg, #C8A96A, rgba(200, 169, 106, 0.22));
+  border-radius: 2px;
+  margin-bottom: 20px;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vsd-card:hover .vsd-card-divider { width: 68px; }
+
+/* Project name */
+.vsd-card-name {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+  font-weight: 700;
+  color: #ffffff; /* pure white by default */
+  line-height: 1.45;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+  transition: color 0.3s;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.45);
+}
+
+.vsd-card:hover .vsd-card-name {
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255,255,255,0.12);
+}
+
+/* Location row */
+.vsd-card-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 1.05rem;
+  color: rgba(200, 169, 106, 0.88); /* brighter gold by default */
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  transition: color 0.3s;
+}
+
+.vsd-card:hover .vsd-card-location { color: #C8A96A; }
+
+.vsd-card-pin {
+  font-size: 0.85rem;
+  color: #C8A96A;
+  flex-shrink: 0;
+  margin-top: 4px;
+  filter: drop-shadow(0 0 4px rgba(200, 169, 106, 0.45));
+  transition: filter 0.3s;
+}
+
+.vsd-card:hover .vsd-card-pin {
+  filter: drop-shadow(0 0 9px rgba(200, 169, 106, 0.85));
+}
+
+/* Bottom shine sweep on hover */
+.vsd-card-shine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #C8A96A 40%,
+    rgba(200, 169, 106, 0.4) 60%,
+    transparent 100%);
+  opacity: 0;
+  transform: scaleX(0.3);
+  transform-origin: left;
+  transition:
+    opacity 0.4s ease,
+    transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 0 0 20px 20px;
+}
+
+.vsd-card:hover .vsd-card-shine {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* ── Progress rail ── */
+.vsd-progress-rail {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  height: 2px;
+  background: rgba(200, 169, 106, 0.12);
+  border-radius: 2px;
+  margin: 4px auto 32px;
+  overflow: visible;
+}
+
+.vsd-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C8A96A, rgba(200, 169, 106, 0.55));
+  border-radius: 2px;
+  transition: width 0.1s linear;
+  will-change: width;
+}
+
+.vsd-progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #C8A96A;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(200, 169, 106, 0.7);
+  transition: left 0.1s linear;
+  will-change: left;
+}
+
+/* ── Footer elegance bar ── */
+.vsd-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.vsd-footer-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 106, 0.28), transparent);
+  max-width: 240px;
+}
+
+.vsd-footer-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(200, 169, 106, 0.42);
+  white-space: nowrap;
+}
+
+/* ── Responsive — Tablet (≤ 900px) ── */
+@media (max-width: 900px) {
+  .vsd-section {
+    padding: 0 0 60px;
+  }
+
+  .vsd-heading-zone {
+    padding: 80px 0 40px;
+  }
+
+  /* Disable runway height and sticky — use native CSS scroll instead */
+  .vsd-cards-runway {
+    height: auto !important;
+  }
+
+  .vsd-sticky-wrapper {
+    position: relative;
+    top: auto;
+    height: auto;
+    overflow: visible;
+    padding-bottom: 40px;
+  }
+
+  .vsd-track-outer {
+    overflow: visible;
+  }
+
+  .vsd-track {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    transform: none !important; /* disable JS transform */
+    padding: 20px 4% 32px;
+    gap: 20px;
+    scrollbar-width: none;
+    /* Maintain 2 rows on tablet, but scale cards slightly */
+    grid-auto-columns: clamp(280px, 42vw, 360px);
+  }
+  .vsd-track::-webkit-scrollbar { display: none; }
+
+  .vsd-card {
+    padding: 30px 26px 28px;
+  }
+
+  .vsd-card-num {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+  }
+
+  .vsd-card-name {
+    font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+    margin-bottom: 14px;
+  }
+
+  .vsd-card-location {
+    font-size: 0.95rem;
+  }
+
+  .vsd-header {
+    margin-bottom: 36px;
+  }
+
+  .vsd-edge {
+    width: 48px;
+  }
+}
+
+/* ── Responsive — Mobile (≤ 600px) ── */
+@media (max-width: 600px) {
+  .vsd-section {
+    padding: 10px 0 60px; /* Extremely tight top space */
+  }
+
+  .vsd-inner {
+    padding: 0 0;
+  }
+
+  .vsd-heading-zone {
+    padding: 10px 0 10px; /* Tighten area above cards */
+  }
+
+  .vsd-header {
+    padding: 0 5%;
+    margin-bottom: 16px;
+  }
+
+  .vsd-scroll-hint {
+    padding: 0 5%;
+    margin-bottom: 12px;
+  }
+
+  .vsd-progress-rail {
+    max-width: 200px;
+    width: 60%;
+    height: 3px;
+    background: rgba(200, 169, 106, 0.2);
+    margin: 8px auto 32px;
+    border-radius: 4px;
+    position: relative;
+    overflow: visible; /* Allows glowing thumb to be fully visible */
+  }
+
+  .vsd-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #C8A96A, #f5e4a0);
+    box-shadow: 0 0 10px rgba(200, 169, 106, 0.8);
+    border-radius: 4px;
+    transition: width 0.1s linear;
+  }
+
+  .vsd-progress-thumb {
+    display: block !important; /* Restore thumb */
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #f5e4a0;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 14px rgba(200, 169, 106, 0.95);
+    transition: left 0.1s linear;
+    pointer-events: none;
+  }
+
+  .vsd-footer-bar {
+    padding: 0 5%;
+  }
+
+  .vsd-footer-line {
+    max-width: 60px;
+  }
+
+  .vsd-track {
+    /* Standard block layout avoids iOS Safari flexbox width limits completely */
+    display: block;
+    white-space: nowrap;
+    padding: 8px 5vw 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 5vw;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  .vsd-track::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Remove flex pseudo-element */
+  .vsd-track::after {
+    display: none;
+  }
+
+  .vsd-card {
+    /* Show one card at a time with block layout */
+    display: inline-block;
+    vertical-align: top;
+    white-space: normal; /* Reset text wrapping inside card */
+    width: 88vw;
+    max-width: 340px;
+    margin-right: 16px; /* Replaces flex gap */
+    scroll-snap-align: start;
+    padding: 28px 24px 26px;
+    border-radius: 18px;
+    flex: none; /* Override any flex behavior */
+  }
+  
+  .vsd-card:last-of-type {
+    margin-right: 15vw; /* Generous trailing space ensures the last card snaps fully into the viewport */
+  }
+
+  .vsd-card-num {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  .vsd-card-name {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+
+  .vsd-card-location {
+    font-size: 0.9rem;
+  }
+
+  .vsd-edge {
+    width: 36px;
+  }
+
+  .vsd-main-title {
+    /* Max 2 lines, controlled line-height and width */
+    font-size: clamp(1.5rem, 6vw, 1.9rem);
+    line-height: 1.25;
+    max-width: 100%;
+    margin: 0 auto 20px;
+  }
+
+  .vsd-title-counter {
+    font-size: clamp(2.4rem, 10vw, 3.2rem);
+  }
+
+  .vsd-subtitle-row {
+    /* Keep 3 pills in same row, safe center or allow scroll */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 8px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  @supports (justify-content: safe center) {
+    .vsd-subtitle-row {
+      justify-content: safe center;
+    }
+  }
+  .vsd-subtitle-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .vsd-stat-pill {
+    flex: 0 0 auto;
+    font-size: clamp(0.7rem, 2.8vw, 0.8rem);
+    padding: 6px 12px;
+  }
+}
+
+@keyframes vsdMobileProgressLoop {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ── Reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .vsd-particle   { animation: none; }
+  .vsd-hint-arrow { animation: none; }
+
+  .vsd-card {
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+
+  .vsd-header {
+    transition: opacity 0.3s;
+  }
+}

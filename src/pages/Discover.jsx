@@ -564,8 +564,8 @@ function VisionSection() {
 
               {/* Mobile Topic Switcher — ONLY visible on mobile via CSS */}
               <div className="vision-mobile-switcher">
-                <button 
-                  className="vm-btn vm-btn-prev" 
+                <button
+                  className="vm-btn vm-btn-prev"
                   onClick={() => {
                     const prev = (activeIdx - 1 + VISION_POINTS.length) % VISION_POINTS.length;
                     activate(prev, true);
@@ -574,13 +574,13 @@ function VisionSection() {
                 >
                   <span className="vm-arrow">‹</span>
                 </button>
-                
+
                 <div className="vm-content">
                   <span className="vm-title">{pt.title}</span>
                 </div>
 
-                <button 
-                  className="vm-btn vm-btn-next" 
+                <button
+                  className="vm-btn vm-btn-next"
                   onClick={() => {
                     const next = (activeIdx + 1) % VISION_POINTS.length;
                     activate(next, true);
@@ -1581,6 +1581,261 @@ function SiteShowcaseSection() {
   );
 }
 
+/* ============================================================
+   SUCCESSFUL DEVELOPMENTS — 23 Projects Luxury Showcase
+   ============================================================ */
+
+const VGM_PROJECTS = [
+  { id: 1, name: 'Nova - ATS', location: 'Urapakkam' },
+  { id: 2, name: 'Sri Ram Nagar', location: 'Paranji Arakonam' },
+  { id: 3, name: 'RPD Village', location: 'Oragadam' },
+  { id: 4, name: 'Ram Nagar - Phase 2', location: 'Arakonam' },
+  { id: 5, name: 'Cynosure City - Phase 1 & 2', location: 'SRM University' },
+  { id: 6, name: 'Santhosh Nagar', location: 'Thiruvallur Chennai' },
+  { id: 7, name: 'Rajalakshmi Nagar', location: 'Arakonam' },
+  { id: 8, name: 'Cynosure Extention - Phase 3', location: 'SRM University' },
+  { id: 9, name: 'Sri Ram Nagar', location: 'Arakonam' },
+  { id: 10, name: 'Ram Nagar - Phase 2', location: 'Arakonam Perumbakkam' },
+  { id: 11, name: 'Shri Ganapathy Nagar', location: 'Kondakarai Village Arakonam' },
+  { id: 12, name: 'Highway Rainbow City - Phase 2', location: 'Tindivanam' },
+  { id: 13, name: 'Sri Ram Nagar - Phase 1', location: 'Arakonam' },
+  { id: 14, name: 'Golden City', location: 'Kattavakkam Village Kanchipuram' },
+  { id: 15, name: 'Sri Rajalakshmi Nagar', location: 'Nedumpuli village Arakonam' },
+  { id: 16, name: 'Sri Padmavathy Nagar', location: 'Vaiyavoor Village' },
+  { id: 17, name: 'Sai Golden Lane', location: 'Chengalpattu Attur Village' },
+  { id: 18, name: 'Cynosure City - Phase 4 & 5', location: 'SRM University' },
+  { id: 19, name: 'Star Breeze Phase - 1B', location: 'Oragadam' },
+  { id: 20, name: 'Venkateshwara Garden 1 & 2', location: 'Acharapakkam' },
+  { id: 21, name: 'Venkateshwara Golden city 2 & 3', location: 'Acharapakkam' },
+  { id: 22, name: 'Nova Garden', location: 'Veppampattu' },
+  { id: 23, name: 'Ramnagar Phase -2', location: 'Peruvalayam Arakonam' },
+];
+
+function SuccessfulDevelopments() {
+  const sectionRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const trackRef = useRef(null);
+  const cardsRef = useRef([]);
+
+  const [inView, setInView] = useState(false);
+  const [countDone, setCountDone] = useState(false);
+  const [displayCount, setDisplayCount] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  const isMobile = useRef(false);
+
+  /* ── Section in-view detection ── */
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
+      { threshold: 0.10 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  /* ── Detect mobile/tablet ── */
+  useEffect(() => {
+    isMobile.current = window.matchMedia('(max-width: 900px)').matches;
+    const mq = window.matchMedia('(max-width: 900px)');
+    const fn = (e) => { isMobile.current = e.matches; };
+    mq.addEventListener('change', fn);
+    return () => mq.removeEventListener('change', fn);
+  }, []);
+
+  /* ── Animated counter 0 → 23 ── */
+  useEffect(() => {
+    if (!inView || countDone) return;
+    let start = null;
+    const duration = 1800;
+    const animate = (ts) => {
+      if (!start) start = ts;
+      const prog = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - prog, 3);
+      setDisplayCount(Math.floor(eased * 23));
+      if (prog < 1) requestAnimationFrame(animate);
+      else { setDisplayCount(23); setCountDone(true); }
+    };
+    requestAnimationFrame(animate);
+  }, [inView, countDone]);
+
+  /* ── Staggered card reveal ── */
+  useEffect(() => {
+    if (!inView) return;
+    cardsRef.current.filter(Boolean).forEach((card, i) => {
+      setTimeout(() => card.classList.add('vsd-card--visible'), 120 + i * 55);
+    });
+  }, [inView]);
+
+  /* ── Native Scroll-Driven Horizontal Animation ── */
+  useEffect(() => {
+    const runway = wrapperRef.current;
+    const track = trackRef.current;
+    if (!runway || !track) return;
+
+    let raf = null;
+    let currentX = 0;
+
+    const ENTRY_BUFFER = 280; // Pause duration (in pixels) before horizontal starts
+
+    const setHeight = () => {
+      if (isMobile.current) {
+        runway.style.height = '';
+        return;
+      }
+      const maxX = Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
+      // Runway needs room for: sticky panel (100vh) + pause (ENTRY_BUFFER) + horizontal distance (maxX)
+      runway.style.height = `${window.innerHeight + ENTRY_BUFFER + maxX}px`;
+    };
+
+    const timer = setTimeout(setHeight, 250);
+    window.addEventListener('resize', setHeight);
+
+    const loop = () => {
+      if (!isMobile.current && runway) {
+        const maxX = Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
+        const rect = runway.getBoundingClientRect();
+
+        // Calculate how far the runway has scrolled past the top of the viewport
+        const scrollDistance = -rect.top;
+
+        let targetX = 0;
+
+        if (scrollDistance > ENTRY_BUFFER) {
+          // Subtract the entry buffer so horizontal starts at 0 after the pause
+          targetX = Math.min(maxX, scrollDistance - ENTRY_BUFFER);
+        } else if (scrollDistance <= ENTRY_BUFFER) {
+          // During the pause, or before the section reaches the top, stay at 0
+          targetX = 0;
+        }
+
+        // Lerp for smooth cinematic feel
+        currentX += (targetX - currentX) * 0.08;
+        if (Math.abs(currentX - targetX) < 0.5) currentX = targetX;
+
+        track.style.transform = `translate3d(${-currentX}px, 0, 0)`;
+
+        const p = maxX > 0 ? currentX / maxX : 0;
+        setProgress(Math.max(0, Math.min(p, 1)));
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', setHeight);
+      cancelAnimationFrame(raf);
+      track.style.transform = '';
+    };
+  }, []);
+
+  /* ── Mobile Native Scroll Progress ── */
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const onNativeScroll = () => {
+      if (!isMobile.current) return;
+      const maxX = track.scrollWidth - track.clientWidth;
+      const p = maxX > 0 ? track.scrollLeft / maxX : 0;
+      setProgress(p);
+    };
+    track.addEventListener('scroll', onNativeScroll, { passive: true });
+    return () => track.removeEventListener('scroll', onNativeScroll);
+  }, []);
+
+  return (
+    <section className="vsd-section" ref={sectionRef} aria-label="23 Successful Developments by VGM Enterprises">
+
+      {/* ── Background ── */}
+      <div className="vsd-bg-wrapper" aria-hidden="true">
+        <div className="vsd-bg-parallax" />
+        <div className="vsd-bg-overlay" />
+        <div className="vsd-particles">
+          {[...Array(18)].map((_, i) => (
+            <span key={i} className={`vsd-particle vsd-particle--${(i % 6) + 1}`} />
+          ))}
+        </div>
+      </div>
+
+      {/* ── Heading zone — scrolls normally ── */}
+      <div className="vsd-heading-zone">
+        <div className="vsd-inner">
+          <div className={`vsd-header${inView ? ' vsd-header--visible' : ''}`}>
+            <div className="vsd-eyebrow">
+              <span className="vsd-eyebrow-line" />Our Legacy<span className="vsd-eyebrow-line" />
+            </div>
+            <h2 className="vsd-main-title">
+              <span className="vsd-title-counter">{displayCount}+</span>
+              <span className="vsd-title-text"> Successful</span>
+              <br />
+              <span className="vsd-title-gold">Developments</span>
+              <span className="vsd-title-text"> by VGM Enterprises</span>
+            </h2>
+            <div className="vsd-subtitle-row">
+              <div className="vsd-stat-pill"><span className="vsd-stat-icon">📍</span><span>Across Tamil Nadu</span></div>
+              <div className="vsd-stat-pill"><span className="vsd-stat-icon">🏆</span><span>Built on Trust &amp; Vision</span></div>
+              <div className="vsd-stat-pill"><span className="vsd-stat-icon">✦</span><span>Since 2010</span></div>
+            </div>
+            <div className="vsd-divider" aria-hidden="true">
+              <span className="vsd-divider-line" /><span className="vsd-divider-diamond">◆</span><span className="vsd-divider-line" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Runway — dynamic height gives sticky panel room to stay pinned ── */}
+      <div className="vsd-cards-runway" ref={wrapperRef}>
+        <div className="vsd-sticky-wrapper">
+          <div className="vsd-inner">
+
+            <div className={`vsd-scroll-hint${inView ? ' vsd-scroll-hint--visible' : ''}`} aria-hidden="true">
+              <span className="vsd-hint-arrow">←</span>
+              <span className="vsd-hint-text">Scroll to explore all 23 projects</span>
+              <span className="vsd-hint-arrow">→</span>
+            </div>
+
+            <div className="vsd-track-outer" aria-label="Project cards">
+              <div className="vsd-edge vsd-edge--left" aria-hidden="true" />
+              <div className="vsd-edge vsd-edge--right" aria-hidden="true" />
+              <div className="vsd-track" ref={trackRef} role="list">
+                {VGM_PROJECTS.map((proj, i) => (
+                  <article key={proj.id} className="vsd-card" role="listitem"
+                    ref={(el) => (cardsRef.current[i] = el)}>
+                    <div className="vsd-card-glow" aria-hidden="true" />
+                    <div className="vsd-card-num" aria-label={`Project number ${proj.id}`}>{String(proj.id).padStart(2, '0')}</div>
+                    <div className="vsd-card-divider" aria-hidden="true" />
+                    <h3 className="vsd-card-name">{proj.name}</h3>
+                    <div className="vsd-card-location">
+                      <span className="vsd-card-pin" aria-hidden="true">◈</span>
+                      <span>{proj.location}</span>
+                    </div>
+                    <div className="vsd-card-shine" aria-hidden="true" />
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="vsd-progress-rail" aria-hidden="true">
+              <div className="vsd-progress-fill" style={{ width: `${Math.round(progress * 100)}%` }} />
+              <div className="vsd-progress-thumb" style={{ left: `${Math.round(progress * 100)}%` }} />
+            </div>
+
+            <div className="vsd-footer-bar" aria-hidden="true">
+              <span className="vsd-footer-line" />
+              <span className="vsd-footer-label">VGM Enterprises · Est. 2010</span>
+              <span className="vsd-footer-line" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Discover() {
   useScrollReveal();
   const navigate = useNavigate();
@@ -1595,13 +1850,13 @@ export default function Discover() {
   const lastScrollY = useRef(0);
   const [heroPoster, setHeroPoster] = useState(null);
   const [hasScrolled, setHasScrolled] = useState(false);
-  
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
       const heroBottom = windowHeight * 2;
-      
+
       if (scrollY > 50) {
         setHasScrolled(true);
       } else {
@@ -1632,7 +1887,7 @@ export default function Discover() {
 
       lastScrollY.current = scrollY;
     };
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
@@ -1806,29 +2061,29 @@ export default function Discover() {
                 setHeroPoster(canvas.toDataURL('image/jpeg', 0.85));
               } catch (_) { /* silent — gradient fallback is used */ }
             }}
-            // loop removed to naturally stop on final frame
-            // autoPlay removed to start frozen
+          // loop removed to naturally stop on final frame
+          // autoPlay removed to start frozen
           >
             <source src="/videos/vgmvideo.mp4" type="video/mp4" />
           </video>
-          
+
           <div className="dvh-overlay-global" />
           <div className={`dvh-overlay-gradient ${hasScrolled ? 'faded' : ''}`} />
-          
+
           <div className={`dvh-interactive-content ${hasScrolled ? 'faded' : ''}`}>
             <div className="discover-title-wrapper">
               <div className="dvh-badge reveal">PREMIUM PLOTTED DEVELOPMENT</div>
-              
+
               <h1 className="dvh-title reveal delay-1">
                 Where Every<br />
                 <span className="dvh-title-gold">Investment Finds</span><br />
                 Its Future
               </h1>
-              
+
               <p className="dvh-subtitle reveal delay-2">
                 Experience the epitome of luxury real estate. Discover meticulously planned landscapes and world-class infrastructure designed to elevate your standard of living.
               </p>
-              
+
               <div className="dvh-actions reveal delay-3">
                 <NavLink to="/master-plan" className="btn-gold">Explore Master Plan</NavLink>
               </div>
@@ -2032,7 +2287,10 @@ export default function Discover() {
         </div>
       </section>
 
-      {/* ===== CIRCULAR SUSTAINABILITY DIAGRAM ===== */}
+  
+            {/* ===== 23 SUCCESSFUL DEVELOPMENTS ===== */}
+            <SuccessfulDevelopments />
+
 
       {/* ===== FINAL CTA SECTION ===== */}
       <section className="discover-cta-strip" aria-label="Call to action">
