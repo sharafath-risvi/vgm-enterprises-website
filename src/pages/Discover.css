@@ -3856,7 +3856,7 @@
 /* ── Header block ── */
 .vsd-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 10px;
   opacity: 0;
   transform: translateY(36px);
   transition:
@@ -4400,36 +4400,45 @@
   }
 
   .vsd-progress-rail {
-    max-width: 200px;
-    width: 60%;
+    display: block;
+    width: 240px;
+    max-width: 80%;
     height: 3px;
-    background: rgba(200, 169, 106, 0.2);
-    margin: 8px auto 32px;
-    border-radius: 4px;
+    background: rgba(200, 169, 106, 0.3);
+    margin: 24px auto 40px;
+    border-radius: 3px;
     position: relative;
-    overflow: visible; /* Allows glowing thumb to be fully visible */
+    overflow: visible;
+    z-index: 20;
   }
 
   .vsd-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #C8A96A, #f5e4a0);
-    box-shadow: 0 0 10px rgba(200, 169, 106, 0.8);
-    border-radius: 4px;
-    transition: width 0.1s linear;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #C8A96A, #FFECA8);
+    box-shadow: 0 0 12px rgba(200, 169, 106, 0.9);
+    border-radius: 3px;
+    transition: none !important;
+    will-change: width;
+    z-index: 21;
   }
 
   .vsd-progress-thumb {
-    display: block !important; /* Restore thumb */
+    display: block !important;
     position: absolute;
     top: 50%;
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #f5e4a0;
+    background: #FFECA8;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 14px rgba(200, 169, 106, 0.95);
-    transition: left 0.1s linear;
+    box-shadow: 0 0 20px rgba(255, 236, 168, 1);
+    transition: none !important;
+    will-change: left;
     pointer-events: none;
+    z-index: 22;
   }
 
   .vsd-footer-bar {
@@ -4441,10 +4450,11 @@
   }
 
   .vsd-track {
-    /* Standard block layout avoids iOS Safari flexbox width limits completely */
-    display: block;
-    white-space: nowrap;
+    /* Robust flexbox layout for mobile horizontal scrolling */
+    display: flex;
+    white-space: normal;
     padding: 8px 5vw 24px;
+    gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 5vw;
@@ -4457,27 +4467,46 @@
     display: none;
   }
   
-  /* Remove flex pseudo-element */
+  /* Replace flex pseudo-element with a proper spacer to ensure last card isn't cut off */
   .vsd-track::after {
-    display: none;
+    content: '';
+    display: block;
+    flex: 0 0 5vw;
   }
 
   .vsd-card {
-    /* Show one card at a time with block layout */
-    display: inline-block;
-    vertical-align: top;
-    white-space: normal; /* Reset text wrapping inside card */
-    width: 88vw;
-    max-width: 340px;
-    margin-right: 16px; /* Replaces flex gap */
+    /* Show one card at a time with flex layout */
+    display: flex;
+    flex-direction: column;
+    width: 85vw;
+    max-width: 320px;
     scroll-snap-align: start;
-    padding: 28px 24px 26px;
+    padding: 24px 20px 22px;
     border-radius: 18px;
-    flex: none; /* Override any flex behavior */
+    flex: 0 0 auto; 
+    margin-right: 0;
+    
+    /* Performance optimizations */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
   }
   
   .vsd-card:last-of-type {
-    margin-right: 15vw; /* Generous trailing space ensures the last card snaps fully into the viewport */
+    margin-right: 0; 
+  }
+  
+  /* Remove tap/hover zoom effect on mobile */
+  .vsd-card:hover, .vsd-card:active {
+    transform: none !important;
+    background: linear-gradient(145deg, rgba(17, 72, 50, 0.85) 0%, rgba(12, 46, 32, 0.90) 60%, rgba(8, 28, 18, 0.94) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(200, 169, 106, 0.22), 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 36px rgba(200, 169, 106, 0.14), inset 0 1px 0 rgba(200, 169, 106, 0.20), inset 0 0 40px rgba(11, 61, 46, 0.28) !important;
+    border-color: rgba(200, 169, 106, 0.55) !important;
+  }
+
+  /* Improve initial render speed */
+  .vsd-bg-parallax, .vsd-particles {
+    display: none !important;
   }
 
   .vsd-card-num {
@@ -4513,16 +4542,17 @@
   .vsd-subtitle-row {
     /* Keep 3 pills in same row, safe center or allow scroll */
     flex-wrap: nowrap;
-    overflow-x: auto;
-    justify-content: flex-start;
-    gap: 8px;
+    overflow-x: visible;
+    justify-content: center;
+    gap: 4px;
     padding-bottom: 8px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    width: 100%;
   }
   @supports (justify-content: safe center) {
     .vsd-subtitle-row {
-      justify-content: safe center;
+      justify-content: center;
     }
   }
   .vsd-subtitle-row::-webkit-scrollbar {
@@ -4530,9 +4560,10 @@
   }
 
   .vsd-stat-pill {
-    flex: 0 0 auto;
-    font-size: clamp(0.7rem, 2.8vw, 0.8rem);
-    padding: 6px 12px;
+    flex: 0 1 auto;
+    font-size: clamp(0.55rem, 2.2vw, 0.7rem);
+    padding: 6px 8px;
+    white-space: nowrap;
   }
 }
 

@@ -1609,6 +1609,8 @@ const VGM_PROJECTS = [
   { id: 21, name: 'Venkateshwara Golden city 2 & 3', location: 'Acharapakkam' },
   { id: 22, name: 'Nova Garden', location: 'Veppampattu' },
   { id: 23, name: 'Ramnagar Phase -2', location: 'Peruvalayam Arakonam' },
+  // { id: 24, name: 'Ramnagar Phase -2', location: 'Peruvalayam Arakonam' },
+  // { id: 25, name: 'Ramnagar Phase -2', location: 'Peruvalayam Arakonam' },
 ];
 
 function SuccessfulDevelopments() {
@@ -1649,7 +1651,7 @@ function SuccessfulDevelopments() {
   useEffect(() => {
     if (!inView || countDone) return;
     let start = null;
-    const duration = 1800;
+    const duration = isMobile.current ? 1000 : 1800; // Faster on mobile
     const animate = (ts) => {
       if (!start) start = ts;
       const prog = Math.min((ts - start) / duration, 1);
@@ -1664,8 +1666,10 @@ function SuccessfulDevelopments() {
   /* ── Staggered card reveal ── */
   useEffect(() => {
     if (!inView) return;
+    const baseDelay = isMobile.current ? 40 : 120;
+    const stepDelay = isMobile.current ? 30 : 55;
     cardsRef.current.filter(Boolean).forEach((card, i) => {
-      setTimeout(() => card.classList.add('vsd-card--visible'), 120 + i * 55);
+      setTimeout(() => card.classList.add('vsd-card--visible'), baseDelay + i * stepDelay);
     });
   }, [inView]);
 
@@ -1737,10 +1741,11 @@ function SuccessfulDevelopments() {
     const track = trackRef.current;
     if (!track) return;
     const onNativeScroll = () => {
-      if (!isMobile.current) return;
       const maxX = track.scrollWidth - track.clientWidth;
-      const p = maxX > 0 ? track.scrollLeft / maxX : 0;
-      setProgress(p);
+      if (maxX > 0) {
+        const p = track.scrollLeft / maxX;
+        setProgress(Math.max(0, Math.min(p, 1)));
+      }
     };
     track.addEventListener('scroll', onNativeScroll, { passive: true });
     return () => track.removeEventListener('scroll', onNativeScroll);
