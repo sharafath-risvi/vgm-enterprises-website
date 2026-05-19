@@ -520,6 +520,7 @@ function SustainableLivingShowcase() {
   const activeIdxRef = useRef(0);
   const isAnimatingRef = useRef(false);
   const wheelBufferRef = useRef(0);
+  const touchStartXRef = useRef(null);
   const touchStartYRef = useRef(null);
   const touchLockedRef = useRef(false);
   const transitionTimerRef = useRef(null);
@@ -587,36 +588,77 @@ function SustainableLivingShowcase() {
 
     const onTouchStart = (event) => {
       if (!isPinned()) return;
+      touchStartXRef.current = event.touches[0]?.clientX ?? null;
       touchStartYRef.current = event.touches[0]?.clientY ?? null;
       touchLockedRef.current = false;
     };
 
     const onTouchMove = (event) => {
-      if (!isPinned() || touchStartYRef.current == null) return;
+      if (!isPinned() || touchStartXRef.current == null || touchStartYRef.current == null) return;
 
+      const currentX = event.touches[0]?.clientX ?? touchStartXRef.current;
       const currentY = event.touches[0]?.clientY ?? touchStartYRef.current;
+
+      const deltaX = touchStartXRef.current - currentX;
       const deltaY = touchStartYRef.current - currentY;
 
-      if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
+      const isMobile = window.matchMedia('(max-width: 900px)').matches;
 
-      const direction = Math.sign(deltaY);
-      const atStart = activeIdxRef.current === 0;
-      const atEnd = activeIdxRef.current === N - 1;
-      const tryingToLeave = (direction < 0 && atStart) || (direction > 0 && atEnd);
+      if (isMobile) {
+        // Horizontal swipe vs Vertical swipe
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          // Horizontal Swipe: Lock vertical screen scroll while moving horizontally
+          if (event.cancelable) event.preventDefault();
 
-      if (tryingToLeave && !isAnimatingRef.current) {
-        touchStartYRef.current = currentY;
-        return;
-      }
+          if (Math.abs(deltaX) < TOUCH_THRESHOLD) return;
 
-      event.preventDefault();
+          const direction = Math.sign(deltaX); // 1 for next, -1 for prev
+          const nextIdx = activeIdxRef.current + direction;
 
-      if (!touchLockedRef.current && !isAnimatingRef.current) {
-        touchLockedRef.current = goToSlide(activeIdxRef.current + direction);
+          if (nextIdx >= 0 && nextIdx < N) {
+            if (!touchLockedRef.current && !isAnimatingRef.current) {
+              touchLockedRef.current = goToSlide(nextIdx);
+            }
+          }
+        } else {
+          // Vertical Swipe: Exit section at boundaries, lock inside slides
+          const direction = Math.sign(deltaY); // 1 for down, -1 for up
+          const atStart = activeIdxRef.current === 0;
+          const atEnd = activeIdxRef.current === N - 1;
+          const tryingToLeave = (direction < 0 && atStart) || (direction > 0 && atEnd);
+
+          if (tryingToLeave) {
+            // Let the page scroll naturally
+            return;
+          } else {
+            // Prevent accidental vertical scroll while we are in the middle of slides
+            if (event.cancelable) event.preventDefault();
+          }
+        }
+      } else {
+        // Desktop/Tablet vertical touch swipe behavior
+        if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
+
+        const direction = Math.sign(deltaY);
+        const atStart = activeIdxRef.current === 0;
+        const atEnd = activeIdxRef.current === N - 1;
+        const tryingToLeave = (direction < 0 && atStart) || (direction > 0 && atEnd);
+
+        if (tryingToLeave && !isAnimatingRef.current) {
+          touchStartYRef.current = currentY;
+          return;
+        }
+
+        if (event.cancelable) event.preventDefault();
+
+        if (!touchLockedRef.current && !isAnimatingRef.current) {
+          touchLockedRef.current = goToSlide(activeIdxRef.current + direction);
+        }
       }
     };
 
     const onTouchEnd = () => {
+      touchStartXRef.current = null;
       touchStartYRef.current = null;
       touchLockedRef.current = false;
     };
