@@ -4074,7 +4074,7 @@
   will-change: transform;
 }
 
-.vsd-track-end-spacer {
+.vsd-track-spacer {
   display: none;
 }
 
@@ -4351,7 +4351,7 @@
     grid-auto-columns: clamp(280px, 42vw, 360px);
   }
 
-  .vsd-track-end-spacer {
+  .vsd-track-spacer {
     display: none;
   }
   .vsd-track::-webkit-scrollbar { display: none; }
@@ -4463,7 +4463,7 @@
     width: max-content;
     min-width: 100%;
     white-space: normal;
-    padding: 8px 5vw 24px 5vw;
+    padding: 8px 0 24px var(--vsd-mobile-start-space);
     gap: 16px;
     overflow: visible;
     transform: none !important;
@@ -4472,11 +4472,13 @@
   }
 
   .vsd-track-outer {
+    --vsd-mobile-start-space: 5vw;
+    --vsd-mobile-end-space: 20px;
     overflow-x: auto;
     overflow-y: visible;
     scroll-snap-type: x mandatory;
-    scroll-padding-left: 5vw;
-    scroll-padding-right: 5vw;
+    scroll-padding-left: var(--vsd-mobile-start-space);
+    scroll-padding-right: var(--vsd-mobile-end-space);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     touch-action: pan-x;
@@ -4485,10 +4487,10 @@
     display: none;
   }
 
-  .vsd-track-end-spacer {
+  .vsd-track-spacer {
     display: block;
-    flex: 0 0 max(5vw, 20px);
-    width: max(5vw, 20px);
+    flex: 0 0 var(--vsd-mobile-end-space);
+    width: var(--vsd-mobile-end-space);
     pointer-events: none;
   }
 
@@ -4499,7 +4501,7 @@
     width: 85vw;
     max-width: 320px;
     min-width: min(85vw, 320px);
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     padding: 24px 20px 22px;
     border-radius: 18px;
     flex: 0 0 auto; 

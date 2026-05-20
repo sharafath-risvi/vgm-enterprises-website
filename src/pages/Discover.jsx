@@ -1752,7 +1752,22 @@ function SuccessfulDevelopments() {
     };
 
     const syncNativeMetrics = () => {
-      window.requestAnimationFrame(onNativeScroll);
+      window.requestAnimationFrame(() => {
+        const firstCard = track.querySelector('.vsd-card');
+        if (isMobile.current && firstCard) {
+          const startSpace = Math.round(scroller.clientWidth * 0.05);
+          const endSpace = Math.max(
+            20,
+            scroller.clientWidth - firstCard.clientWidth - startSpace
+          );
+          scroller.style.setProperty('--vsd-mobile-start-space', `${startSpace}px`);
+          scroller.style.setProperty('--vsd-mobile-end-space', `${endSpace}px`);
+        } else {
+          scroller.style.removeProperty('--vsd-mobile-start-space');
+          scroller.style.removeProperty('--vsd-mobile-end-space');
+        }
+        onNativeScroll();
+      });
     };
 
     syncNativeMetrics();
@@ -1761,6 +1776,8 @@ function SuccessfulDevelopments() {
     return () => {
       scroller.removeEventListener('scroll', onNativeScroll);
       window.removeEventListener('resize', syncNativeMetrics);
+      scroller.style.removeProperty('--vsd-mobile-start-space');
+      scroller.style.removeProperty('--vsd-mobile-end-space');
     };
   }, []);
 
@@ -1833,7 +1850,7 @@ function SuccessfulDevelopments() {
                     <div className="vsd-card-shine" aria-hidden="true" />
                   </article>
                 ))}
-                <div className="vsd-track-end-spacer" aria-hidden="true" />
+                <div className="vsd-track-spacer vsd-track-spacer--end" aria-hidden="true" />
               </div>
             </div>
 
