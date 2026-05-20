@@ -605,9 +605,9 @@ function SustainableLivingShowcase() {
       const isMobile = window.matchMedia('(max-width: 900px)').matches;
 
       if (isMobile) {
-        // Horizontal swipe vs Vertical swipe
+        // On mobile, both horizontal and vertical swipes can advance the story cards.
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          // Horizontal Swipe: Lock vertical screen scroll while moving horizontally
+          // Horizontal swipe: advance cards left/right.
           if (event.cancelable) event.preventDefault();
 
           if (Math.abs(deltaX) < TOUCH_THRESHOLD) return;
@@ -621,18 +621,18 @@ function SustainableLivingShowcase() {
             }
           }
         } else {
-          // Vertical Swipe: Exit section at boundaries, lock inside slides
-          const direction = Math.sign(deltaY); // 1 for down, -1 for up
-          const atStart = activeIdxRef.current === 0;
-          const atEnd = activeIdxRef.current === N - 1;
-          const tryingToLeave = (direction < 0 && atStart) || (direction > 0 && atEnd);
+          // Vertical swipe: advance cards up/down, but still allow leaving at boundaries.
+          if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
 
-          if (tryingToLeave) {
-            // Let the page scroll naturally
-            return;
-          } else {
-            // Prevent accidental vertical scroll while we are in the middle of slides
+          const direction = Math.sign(deltaY);
+          const nextIdx = activeIdxRef.current + direction;
+
+          if (nextIdx >= 0 && nextIdx < N) {
             if (event.cancelable) event.preventDefault();
+
+            if (!touchLockedRef.current && !isAnimatingRef.current) {
+              touchLockedRef.current = goToSlide(nextIdx);
+            }
           }
         }
       } else {

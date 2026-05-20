@@ -220,6 +220,9 @@ body.sls-nav-hidden .navbar {
   border-radius: 2px;
   transition: var(--transition);
 }
+.nav-mobile-backdrop {
+  display: none;
+}
 
 /* Mobile Nav */
 @media (max-width: 900px) {
@@ -237,16 +240,22 @@ body.sls-nav-hidden .navbar {
     width: 100%;
     max-width: 100%;
     overflow-x: clip;
+    z-index: 10010;
   }
   .navbar-inner {
     width: 100%;
     max-width: 100%;
     min-width: 0;
+    position: relative;
+    z-index: 10012;
   }
   .nav-logo {
     flex: 0 1 auto;
     min-width: 0;
     max-width: calc(100% - 56px);
+    position: relative;
+    z-index: 10012;
+    pointer-events: auto;
   }
   .nav-logo-img {
     height: 90x;
@@ -260,10 +269,29 @@ body.sls-nav-hidden .navbar {
     margin-left: auto;
   }
   .nav-links { display: none; }
+  .nav-mobile-backdrop {
+    display: block;
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: rgba(8, 20, 16, 0.24);
+    pointer-events: auto;
+    z-index: 10010;
+    touch-action: none;
+  }
   .nav-hamburger {
     display: flex;
     flex: 0 0 auto;
     padding: 8px 4px 8px 8px;
+    position: relative;
+    z-index: 10013;
+    pointer-events: auto;
+    touch-action: manipulation;
   }
   .nav-links.open {
     display: flex;
@@ -279,7 +307,7 @@ body.sls-nav-hidden .navbar {
     border-bottom: 1px solid rgba(200, 169, 106, 0.15);
     max-width: 100%;
     overflow-x: clip;
-    z-index: 1001;
+    z-index: 10011;
     pointer-events: auto;
   }
   .nav-pill {
@@ -293,6 +321,7 @@ body.sls-nav-hidden .navbar {
     z-index: 5; /* Higher than potential overlays */
     pointer-events: auto !important;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   .nav-link {
     padding: 18px 24px;
@@ -327,7 +356,7 @@ body.sls-nav-hidden .navbar {
     flex: 0 0 auto;
     padding: 12px;
     margin-right: -8px;
-    z-index: 1002; /* Above the links container */
+    z-index: 10013; /* Above the links container */
   }
 }
 

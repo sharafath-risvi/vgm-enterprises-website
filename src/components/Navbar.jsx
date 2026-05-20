@@ -82,9 +82,33 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!isMobileNav) {
+      document.body.style.overflow = '';
+      return undefined;
+    }
+
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileNav, menuOpen]);
+
   const goTo = useCallback((path) => {
     navigate(path);
     setMenuOpen(false);
+  }, [navigate]);
+
+  const handleMobileNavLinkClick = useCallback((path) => (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    navigate(path);
+
+    // Delay closing by a tick so Android browsers don't drop the route change.
+    window.setTimeout(() => {
+      setMenuOpen(false);
+    }, 0);
   }, [navigate]);
 
   const handleMouseEnter = (e) => {
@@ -112,6 +136,15 @@ export default function Navbar() {
         transition: 'transform 0.4s ease, background-color 0.3s ease, padding 0.3s ease',
       }}
     >
+      {isMobileNav && menuOpen ? (
+        <button
+          type="button"
+          className="nav-mobile-backdrop"
+          aria-label="Close menu"
+          onClick={() => setMenuOpen(false)}
+        />
+      ) : null}
+
       <div className="navbar-inner">
 
         {/* LOGO — works on both mobile and desktop */}
@@ -137,27 +170,27 @@ export default function Navbar() {
 
             {isMobileNav ? (
               <>
-                <button
-                  type="button"
+                <NavLink
+                  to="/"
                   className={'nav-link' + (checkIsActive('/') ? ' active' : '')}
-                  onClick={() => goTo('/')}
+                  onClick={handleMobileNavLinkClick('/')}
                 >
                   Discover
-                </button>
-                <button
-                  type="button"
+                </NavLink>
+                <NavLink
+                  to="/master-plan"
                   className={'nav-link' + (checkIsActive('/master-plan') ? ' active' : '')}
-                  onClick={() => goTo('/master-plan')}
+                  onClick={handleMobileNavLinkClick('/master-plan')}
                 >
                   Master Plan
-                </button>
-                <button
-                  type="button"
+                </NavLink>
+                <NavLink
+                  to="/connect"
                   className={'nav-link' + (checkIsActive('/connect') ? ' active' : '')}
-                  onClick={() => goTo('/connect')}
+                  onClick={handleMobileNavLinkClick('/connect')}
                 >
                   Connect
-                </button>
+                </NavLink>
               </>
             ) : (
               NAV_ITEMS.map((item, i) => (
