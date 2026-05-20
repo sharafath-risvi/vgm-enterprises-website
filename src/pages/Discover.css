@@ -4074,6 +4074,10 @@
   will-change: transform;
 }
 
+.vsd-track-end-spacer {
+  display: none;
+}
+
 /* ── Individual Card — premium by default ── */
 .vsd-card {
   position: relative;
@@ -4346,6 +4350,10 @@
     /* Maintain 2 rows on tablet, but scale cards slightly */
     grid-auto-columns: clamp(280px, 42vw, 360px);
   }
+
+  .vsd-track-end-spacer {
+    display: none;
+  }
   .vsd-track::-webkit-scrollbar { display: none; }
 
   .vsd-card {
@@ -4452,12 +4460,15 @@
   .vsd-track {
     /* Robust flexbox layout for mobile horizontal scrolling */
     display: flex;
+    width: max-content;
+    min-width: 100%;
     white-space: normal;
-    padding: 8px 5vw 24px;
+    padding: 8px 5vw 24px 5vw;
     gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 5vw;
+    scroll-padding-right: 5vw;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     transform: none !important;
@@ -4466,12 +4477,12 @@
   .vsd-track::-webkit-scrollbar {
     display: none;
   }
-  
-  /* Replace flex pseudo-element with a proper spacer to ensure last card isn't cut off */
-  .vsd-track::after {
-    content: '';
+
+  .vsd-track-end-spacer {
     display: block;
-    flex: 0 0 5vw;
+    flex: 0 0 max(5vw, 20px);
+    width: max(5vw, 20px);
+    pointer-events: none;
   }
 
   .vsd-card {
@@ -4480,6 +4491,7 @@
     flex-direction: column;
     width: 85vw;
     max-width: 320px;
+    min-width: min(85vw, 320px);
     scroll-snap-align: start;
     padding: 24px 20px 22px;
     border-radius: 18px;

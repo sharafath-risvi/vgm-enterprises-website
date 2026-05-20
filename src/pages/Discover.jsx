@@ -1745,10 +1745,22 @@ function SuccessfulDevelopments() {
       if (maxX > 0) {
         const p = track.scrollLeft / maxX;
         setProgress(Math.max(0, Math.min(p, 1)));
+      } else {
+        setProgress(0);
       }
     };
+
+    const syncNativeMetrics = () => {
+      window.requestAnimationFrame(onNativeScroll);
+    };
+
+    syncNativeMetrics();
     track.addEventListener('scroll', onNativeScroll, { passive: true });
-    return () => track.removeEventListener('scroll', onNativeScroll);
+    window.addEventListener('resize', syncNativeMetrics);
+    return () => {
+      track.removeEventListener('scroll', onNativeScroll);
+      window.removeEventListener('resize', syncNativeMetrics);
+    };
   }, []);
 
   return (
@@ -1820,6 +1832,7 @@ function SuccessfulDevelopments() {
                     <div className="vsd-card-shine" aria-hidden="true" />
                   </article>
                 ))}
+                <div className="vsd-track-end-spacer" aria-hidden="true" />
               </div>
             </div>
 
