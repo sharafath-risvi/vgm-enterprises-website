@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useScrollReveal, useTiltCards } from '../components/useAnimations';
+import { useImagePreload } from '../components/useImagePreload';
 import './Connect.css';
 
 const FORM_FIELDS = [
@@ -14,12 +15,19 @@ const FORM_FIELDS = [
 export default function Connect() {
   useScrollReveal();
   useTiltCards();
+  useImagePreload({
+    href: '/bg3image.webp',
+    srcSet: '/hero/discover-connect-hero-mobile.jpg 800w, /bg3image.webp 1448w',
+    sizes: '100vw',
+    fetchPriority: 'high',
+  });
 
   const [form, setForm] = useState({
     name: '', phone: '', email: '', budget: '', plotType: '', visitDate: '', message: ''
   });
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState(null);
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const successCanvasRef = useRef(null);
 
   const handleChange = (e) => {
@@ -79,15 +87,20 @@ export default function Connect() {
   return (
     <div className="connect-page page-enter">
       {/* ===== PAGE HERO ===== */}
-      <section className="connect-hero" aria-label="Connect hero">
+      <section className={`connect-hero${heroLoaded ? ' media-ready' : ''}`} aria-label="Connect hero">
         <div className="connect-hero-bg" aria-hidden="true">
           <img
             src="/bg3image.webp"
+            srcSet="/hero/discover-connect-hero-mobile.jpg 800w, /bg3image.webp 1448w"
+            sizes="100vw"
             alt="Luxury Architectural Real Estate"
             className="connect-hero-img"
             fetchpriority="high"
             loading="eager"
-            decoding="sync"
+            decoding="async"
+            width="1448"
+            height="1086"
+            onLoad={() => setHeroLoaded(true)}
           />
           <div className="connect-hero-overlay" />
           <div className="connect-hero-gradient-bottom" />

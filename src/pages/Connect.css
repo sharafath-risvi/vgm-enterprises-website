@@ -29,6 +29,13 @@
   object-fit: cover;
   object-position: center;
   animation: cinematicZoom 25s linear infinite alternate;
+  animation-play-state: paused;
+  transform: scale(1.02);
+  will-change: transform, opacity;
+}
+
+.connect-hero.media-ready .connect-hero-img {
+  animation-play-state: running;
 }
 
 @keyframes cinematicZoom {
