@@ -4465,16 +4465,23 @@
     white-space: normal;
     padding: 8px 5vw 24px 5vw;
     gap: 16px;
+    overflow: visible;
+    transform: none !important;
+    will-change: auto !important;
+    touch-action: pan-x;
+  }
+
+  .vsd-track-outer {
     overflow-x: auto;
+    overflow-y: visible;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 5vw;
     scroll-padding-right: 5vw;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    transform: none !important;
-    will-change: auto !important;
+    touch-action: pan-x;
   }
-  .vsd-track::-webkit-scrollbar {
+  .vsd-track-outer::-webkit-scrollbar {
     display: none;
   }
 
@@ -4492,7 +4499,7 @@
     width: 85vw;
     max-width: 320px;
     min-width: min(85vw, 320px);
-    scroll-snap-align: start;
+    scroll-snap-align: center;
     padding: 24px 20px 22px;
     border-radius: 18px;
     flex: 0 0 auto; 

@@ -1739,11 +1739,12 @@ function SuccessfulDevelopments() {
   /* ── Mobile Native Scroll Progress ── */
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    const scroller = track?.parentElement;
+    if (!track || !scroller) return;
     const onNativeScroll = () => {
-      const maxX = track.scrollWidth - track.clientWidth;
+      const maxX = scroller.scrollWidth - scroller.clientWidth;
       if (maxX > 0) {
-        const p = track.scrollLeft / maxX;
+        const p = scroller.scrollLeft / maxX;
         setProgress(Math.max(0, Math.min(p, 1)));
       } else {
         setProgress(0);
@@ -1755,10 +1756,10 @@ function SuccessfulDevelopments() {
     };
 
     syncNativeMetrics();
-    track.addEventListener('scroll', onNativeScroll, { passive: true });
+    scroller.addEventListener('scroll', onNativeScroll, { passive: true });
     window.addEventListener('resize', syncNativeMetrics);
     return () => {
-      track.removeEventListener('scroll', onNativeScroll);
+      scroller.removeEventListener('scroll', onNativeScroll);
       window.removeEventListener('resize', syncNativeMetrics);
     };
   }, []);
