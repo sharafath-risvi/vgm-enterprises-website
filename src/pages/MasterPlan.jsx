@@ -523,6 +523,7 @@ function SustainableLivingShowcase() {
   const touchStartXRef = useRef(null);
   const touchStartYRef = useRef(null);
   const touchLockedRef = useRef(false);
+  const hasCompletedSequenceRef = useRef(false);
   const transitionTimerRef = useRef(null);
   useEffect(() => {
     const outer = outerRef.current;
@@ -621,7 +622,7 @@ function SustainableLivingShowcase() {
             }
           }
         } else {
-          // Vertical swipe: advance cards up/down, but still allow leaving at boundaries.
+          // Vertical swipe: keep the section locked until the user has reached the last card.
           if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
 
           const direction = Math.sign(deltaY);
@@ -633,6 +634,16 @@ function SustainableLivingShowcase() {
             if (!touchLockedRef.current && !isAnimatingRef.current) {
               touchLockedRef.current = goToSlide(nextIdx);
             }
+            return;
+          }
+
+          const canLeaveAfterCompletion =
+            hasCompletedSequenceRef.current &&
+            activeIdxRef.current === N - 1 &&
+            direction > 0;
+
+          if (!canLeaveAfterCompletion && event.cancelable) {
+            event.preventDefault();
           }
         }
       } else {
@@ -685,6 +696,9 @@ function SustainableLivingShowcase() {
 
   useEffect(() => {
     activeIdxRef.current = activeIdx;
+    if (activeIdx === SUSTAIN_STORIES.length - 1) {
+      hasCompletedSequenceRef.current = true;
+    }
   }, [activeIdx]);
 
   return (
