@@ -124,7 +124,7 @@ export default function Connect() {
             <a href="#site-visit-form" className="ch-btn ch-btn-primary">
               Schedule Site Visit
             </a>
-            <a href="tel:+919876543210" className="ch-btn ch-btn-secondary">
+            <a href="tel:+918122902935" className="ch-btn ch-btn-secondary">
               Contact Our Team
             </a>
           </div>
@@ -266,8 +266,8 @@ export default function Connect() {
 
                 {/* Social links */}
                 <div className="social-row">
-                  <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="social-btn" id="social-whatsapp" aria-label="WhatsApp">💬</a>
-                  <a href="tel:+919876543210" className="social-btn" id="social-phone" aria-label="Phone">📞</a>
+                  <a href="https://wa.me/918122902935" target="_blank" rel="noreferrer" className="social-btn" id="social-whatsapp" aria-label="WhatsApp">💬</a>
+                  <a href="tel:+918122902935" className="social-btn" id="social-phone" aria-label="Phone">📞</a>
                   <a href="mailto:info@vgmenterprises.in" className="social-btn" id="social-email" aria-label="Email">✉️</a>
                 </div>
               </div>
@@ -314,7 +314,7 @@ export default function Connect() {
               <a href="#site-visit-form" className="cta-btn-primary">
                 Schedule Site Visit
               </a>
-              <a href="tel:+919876543210" className="cta-btn-secondary">
+              <a href="tel:+918122902935" className="cta-btn-secondary">
                 Contact Our Team
               </a>
             </div>

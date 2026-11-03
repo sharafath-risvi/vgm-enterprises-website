@@ -949,7 +949,7 @@ export default function MasterPlan() {
           </div>
           <div className="cta-strip-actions">
             <NavLink to="/connect" className="btn-gold" id="master-cta-visit">Book Site Visit →</NavLink>
-            <a href="tel:+919876543210" className="btn-outline-gold" id="master-cta-call">📞 Enquire Now</a>
+            <a href="tel:+918122902935" className="btn-outline-gold" id="master-cta-call">📞 Enquire Now</a>
           </div>
         </div>
       </section>
